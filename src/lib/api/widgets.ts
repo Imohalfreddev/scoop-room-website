@@ -8,8 +8,7 @@ const isServer = () => typeof window === "undefined";
 // up yet - see src/app/api/weather, src/app/api/markets). Since that's true
 // either way, read the mock directly on the server instead of doing an
 // HTTP self-fetch to this app's own /api/* routes: that fetch works fine
-// once deployed and actually running, but fails during \
-ext build\'s
+// once deployed and actually running, but fails during Next build's
 // static generation, since the server isn't listening at that point yet
 // (the classic self-referencing-fetch-at-build-time trap). Client-side
 // (browser) fetches are unaffected and still go through apiFetch normally.

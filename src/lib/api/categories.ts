@@ -26,7 +26,7 @@ export async function getCategories(): Promise<Category[]> {
  * category slugs baked into navigation should never 404 a page.
  */
 export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
-  if (!USE_MOCK_API) {
+  if (isServer() && !USE_MOCK_API) {
     const { getCategoryBySlugDb } = await import("@/lib/repository/categories.db");
     const dbCategory = await getCategoryBySlugDb(slug);
     if (dbCategory) return dbCategory;
