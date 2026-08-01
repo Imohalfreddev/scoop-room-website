@@ -1,0 +1,51 @@
+import type { MediaAsset } from "@/types";
+import { articles } from "./articles";
+
+export const mediaAssets: MediaAsset[] = [
+  ...articles.slice(0, 24).map((a, i) => ({
+    id: `media_${a.slug}`,
+    type: "image" as const,
+    url: a.coverImage,
+    thumbnailUrl: `/api/placeholder/${a.slug}?w=400&h=260`,
+    alt: a.title,
+    caption: a.dek,
+    width: 1600,
+    height: 1000,
+    sizeKb: 180 + (i % 6) * 40,
+    createdAt: a.publishedAt,
+    folder: i % 3 === 0 ? "Featured" : "Article Covers",
+  })),
+  {
+    id: "media_brand_logo",
+    type: "image",
+    url: "/brand/scoop-room-logo-light.png",
+    thumbnailUrl: "/brand/scoop-room-logo-light.png",
+    alt: "Scoop Room logo",
+    width: 1500,
+    height: 500,
+    sizeKb: 96,
+    createdAt: new Date().toISOString(),
+    folder: "Brand",
+  },
+  {
+    id: "media_sample_video",
+    type: "video",
+    url: "https://www.w3schools.com/html/mov_bbb.mp4",
+    thumbnailUrl: "/api/placeholder/sample-video?w=400&h=260&label=Video",
+    alt: "Sample newsroom video",
+    width: 1280,
+    height: 720,
+    sizeKb: 3400,
+    createdAt: new Date().toISOString(),
+    folder: "Video",
+  },
+  {
+    id: "media_press_release",
+    type: "document",
+    url: "/documents/sample-press-release.pdf",
+    alt: "Sample press release",
+    sizeKb: 220,
+    createdAt: new Date().toISOString(),
+    folder: "Documents",
+  },
+];

@@ -1,0 +1,188 @@
+// Scoop Room — Prisma schema
+//
+// This is the relational model backing the site once
+// NEXT_PUBLIC_USE_MOCK_API=false (see src/lib/db/prisma.ts and
+// src/lib/repository/articles.db.ts). With the flag left at its default
+// (true), the frontend runs entirely on src/lib/mock/* and no database is
+// required.
+//
+// To activate:
+//   1. Provision Postgres and set DATABASE_URL in .env
+//   2. npx prisma migrate dev --name init
+//   3. npx prisma db seed (see prisma/seed.ts)
+//   4. Set NEXT_PUBLIC_USE_MOCK_API=false
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArticleStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  AUTHOR
+  CONTRIBUTOR
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         UserRole  @default(CONTRIBUTOR)
+  avatarUrl    String?
+  title        String?
+  bio          String?
+  twitter      String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  articles     Article[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  color       String?
+  articles    Article[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  name     String
+  articles Article[] @relation("ArticleTags")
+
+  @@map("tags")
+}
+
+model MediaAsset {
+  id           String     @id @default(cuid())
+  type         MediaType
+  url          String
+  thumbnailUrl String?
+  alt          String
+  caption      String?
+  width        Int?
+  height       Int?
+  sizeKb       Int?
+  folder       String?
+  createdAt    DateTime   @default(now())
+
+  articlesCover Article[] @relation("ArticleCoverImage")
+  galleryOf     Article[] @relation("ArticleGallery")
+
+  @@map("media_assets")
+}
+
+model Article {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  title            String
+  dek              String
+  excerpt          String
+  content          String        @db.Text
+  coverImageId     String?
+  coverImage       MediaAsset?   @relation("ArticleCoverImage", fields: [coverImageId], references: [id])
+  gallery          MediaAsset[]  @relation("ArticleGallery")
+  videoUrl         String?
+
+  categoryId       String
+  category         Category      @relation(fields: [categoryId], references: [id])
+  tags             Tag[]         @relation("ArticleTags")
+
+  authorId         String
+  author           User          @relation(fields: [authorId], references: [id])
+
+  status           ArticleStatus @default(DRAFT)
+  featured         Boolean       @default(false)
+  trending         Boolean       @default(false)
+  sponsored        Boolean       @default(false)
+
+  publishedAt      DateTime?
+  scheduledFor     DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  readTimeMinutes  Int           @default(4)
+  views            Int           @default(0)
+
+  metaTitle        String?
+  metaDescription  String?
+  canonicalUrl     String?
+  ogImage          String?
+  noIndex          Boolean       @default(false)
+
+  comments         Comment[]
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@map("articles")
+}
+
+model Comment {
+  id           String   @id @default(cuid())
+  articleId    String
+  article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  authorName   String
+  authorAvatar String?
+  body         String   @db.Text
+  createdAt    DateTime @default(now())
+
+  @@index([articleId])
+  @@map("comments")
+}
+
+model NewsletterSubscriber {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  source        String?
+  subscribedAt  DateTime @default(now())
+  unsubscribedAt DateTime?
+
+  @@map("newsletter_subscribers")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@map("push_subscriptions")
+}
+
+model AdSlotConfig {
+  id         String  @id @default(cuid())
+  placement  String
+  label      String
+  imageUrl   String?
+  href       String?
+  advertiser String?
+  active     Boolean @default(true)
+
+  @@map("ad_slot_configs")
+}
