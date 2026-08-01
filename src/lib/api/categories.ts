@@ -9,6 +9,10 @@ export async function getCategories(): Promise<Category[]> {
     const { categories } = await import("@/lib/mock/categories");
     return categories;
   }
+  if (isServer() && !USE_MOCK_API) {
+    const { listCategoriesDb } = await import("@/lib/repository/categories.db");
+    return listCategoriesDb();
+  }
   const { items } = await apiFetch<{ items: Category[] }>("/api/categories", {
     next: { revalidate: 3600 },
   });
@@ -18,7 +22,7 @@ export async function getCategories(): Promise<Category[]> {
 /**
  * Prefers the real DB row (so name/description edits made in the admin
  * app show up here), but falls back to the static definition if that
- * category hasn't been created in the database yet — the fixed set of
+ * category hasn't been created in the database yet - the fixed set of
  * category slugs baked into navigation should never 404 a page.
  */
 export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
