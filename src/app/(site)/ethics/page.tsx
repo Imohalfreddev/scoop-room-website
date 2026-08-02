@@ -1,71 +1,138 @@
+// Repo path: src/app/(site)/ethics/page.tsx
 import type { Metadata } from "next";
 import { StaticPageLayout } from "@/components/site/StaticPageLayout";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Newsroom Ethics",
-  description: `The editorial standards ${site.name} holds itself to.`,
+  description: `The editorial principles guiding ${site.name}'s newsroom.`,
 };
 
 export default function EthicsPage() {
   return (
     <StaticPageLayout
       title="Newsroom Ethics"
-      subtitle="The standards we hold ourselves to, and how to hold us accountable."
-      updated="July 2026"
+      subtitle="At Scoop Room, trust is our most valuable asset. Our newsroom is guided by the principles of accuracy, integrity, transparency, independence, and accountability. These standards shape every story we publish and every decision we make."
+      updated="August 2026"
     >
-      <h2>Accuracy first</h2>
+      <h2>Accuracy Above Speed</h2>
       <p>
-        We would rather be second and correct than first and wrong. Stories are
-        reviewed by an editor against their original sources before publication.
-        When we can&apos;t verify a claim to our standard, we don&apos;t publish it, or we
-        say plainly what we don&apos;t yet know.
+        We strive to report breaking news quickly, but never at the expense
+        of accuracy.
+      </p>
+      <p>
+        Every story is reviewed against reliable sources before publication.
+        When information cannot be independently verified, we clearly state
+        what is confirmed, what remains unverified, and what is still
+        developing.
+      </p>
+      <p>If we cannot verify a claim, we do not publish it as fact.</p>
+
+      <h2>Fair &amp; Responsible Reporting</h2>
+      <p>
+        We are committed to reporting honestly, fairly, and without
+        unnecessary sensationalism.
+      </p>
+      <p>
+        Our coverage seeks to provide context, present verified facts, and
+        respect the dignity and privacy of individuals affected by the news.
       </p>
 
-      <h2>Sourcing</h2>
+      <h2>Our Sources</h2>
       <p>
-        We attribute claims to their original source and link out to it wherever
-        possible. We distinguish clearly between confirmed fact, official
-        statements, and unverified reports. Anonymous sources are used sparingly
-        and only when a story can&apos;t be reported otherwise.
+        We rely on trusted news organizations, official government agencies,
+        public records, eyewitness accounts, and other credible sources.
+      </p>
+      <p>
+        Whenever possible, we credit and link to the original source.
+      </p>
+      <p>We clearly distinguish between:</p>
+      <ul>
+        <li>Verified facts</li>
+        <li>Official statements</li>
+        <li>Developing reports</li>
+        <li>Opinion and analysis</li>
+      </ul>
+      <p>
+        Anonymous sources are used only when necessary and after careful
+        editorial review.
       </p>
 
-      <h2>How technology is used in our newsroom</h2>
+      <h2>Technology in Our Newsroom</h2>
       <p>
-        {site.name} uses automated monitoring to help our editors track breaking
-        news across a large number of sources in real time. That monitoring
-        surfaces candidate stories — it does not publish them. A human editor
-        reviews and approves every story before it appears on the site. We
-        disclose this because we think readers deserve to know how their news
-        gets made.
+        Scoop Room uses technology to monitor breaking news and identify
+        stories of public interest across multiple trusted sources.
+      </p>
+      <p>
+        Automation helps our newsroom discover potential stories, but it
+        never publishes content automatically.
+      </p>
+      <p>
+        Every article is reviewed, verified, and approved by a human editor
+        before publication.
       </p>
 
-      <h2>Corrections</h2>
+      <h2>Corrections &amp; Updates</h2>
+      <p>Accuracy does not end at publication.</p>
       <p>
-        When we get something wrong, we fix it and say so. Material corrections
-        are noted at the bottom of the corrected article along with the date of
-        the correction. If you spot an error, please tell us — see{" "}
-        <a href="/contact">Contact</a>.
+        If we discover an error, we will correct it promptly and
+        transparently. Significant corrections or updates will be clearly
+        noted within the article.
+      </p>
+      <p>
+        Readers are encouraged to report mistakes or provide additional
+        verified information.
       </p>
 
-      <h2>Independence</h2>
+      <h2>Editorial Independence</h2>
       <p>
-        Advertisers and sponsors have no input into what we cover or how we cover
-        it. Sponsored content, where it exists, is clearly labeled as such and is
-        held to the same factual standard as our editorial work.
+        Our editorial decisions are made independently of advertisers,
+        sponsors, governments, political parties, corporations, and other
+        outside interests.
+      </p>
+      <p>
+        Commercial relationships never determine what we report or how we
+        report it.
+      </p>
+      <p>
+        Any sponsored or promotional content will always be clearly
+        identified.
       </p>
 
-      <h2>Conflicts of interest</h2>
+      <h2>Conflicts of Interest</h2>
       <p>
-        Our editors and writers disclose personal, financial, or professional
-        conflicts of interest related to a story, and recuse themselves from
-        coverage where a conflict can&apos;t be adequately disclosed.
+        Our editors and contributors must avoid situations that could
+        compromise—or appear to compromise—their independence.
+      </p>
+      <p>
+        Any personal, financial, or professional conflict related to a story
+        must be disclosed, and where appropriate, the individual will not
+        participate in that coverage.
       </p>
 
-      <h2>Questions or concerns</h2>
+      <h2>Accountability</h2>
+      <p>We believe journalism should be transparent and accountable.</p>
       <p>
-        If you believe we&apos;ve fallen short of these standards, we want to hear
-        about it. Reach us through <a href="/contact">Contact</a>.
+        If you believe we have made a mistake, published inaccurate
+        information, or failed to meet our editorial standards, we encourage
+        you to contact us. Every concern is reviewed seriously and fairly.
+      </p>
+      <p>
+        Email:{" "}
+        <a href="mailto:scooproomhq@gmail.com">scooproomhq@gmail.com</a>
+      </p>
+
+      <h2>Our Vision</h2>
+      <p>
+        To become one of the world&apos;s most trusted digital
+        newsrooms—delivering accurate journalism, meaningful stories, and
+        responsible reporting that informs the public, respects human
+        dignity, and strengthens free expression.
+      </p>
+
+      <hr />
+      <p className="text-sm text-muted">
+        Scoop Room — The People&apos;s Stories. Told With Integrity.
       </p>
     </StaticPageLayout>
   );

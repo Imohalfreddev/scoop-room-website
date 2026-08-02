@@ -1,3 +1,4 @@
+// Repo path: src/app/(site)/privacy/page.tsx
 import type { Metadata } from "next";
 import { StaticPageLayout } from "@/components/site/StaticPageLayout";
 import { site } from "@/lib/constants";
@@ -11,102 +12,100 @@ export default function PrivacyPage() {
   return (
     <StaticPageLayout
       title="Privacy Policy"
-      subtitle={`This policy explains what information ${site.name} collects and how it's used.`}
-      updated="July 2026"
+      subtitle="Welcome to Scoop Room. Your privacy matters to us. This Privacy Policy explains what information we collect, how we use it, and the choices you have when using scooproomhq.com."
+      updated="August 2026"
     >
       <p>
-        This Privacy Policy applies to {site.url.replace(/^https?:\/\//, "")} (the
-        &quot;Site&quot;), operated by {site.name}. By using the Site, you agree to the
-        collection and use of information as described here.
+        By accessing or using our website, you agree to this Privacy Policy.
       </p>
 
-      <h2>1. Information we collect</h2>
-      <p>
-        <strong>Information you provide directly:</strong> if you subscribe to our
-        newsletter, leave a comment, or contact us, we collect the information
-        you provide, such as your email address and any message content.
-      </p>
-      <p>
-        <strong>Information collected automatically:</strong> like most websites,
-        we automatically collect certain technical information when you visit —
-        including IP address, browser type, device type, pages viewed, and
-        referring URLs — typically via cookies and similar technologies. See our{" "}
-        <a href="/cookies">Cookie Policy</a> for details.
-      </p>
-
-      <h2>2. How we use information</h2>
+      <h2>1. Information We Collect</h2>
+      <p>We may collect:</p>
       <ul>
-        <li>To operate, maintain, and improve the Site</li>
-        <li>To send newsletters or notifications you&apos;ve opted into</li>
-        <li>To understand aggregate readership and site performance</li>
-        <li>To detect, prevent, and address technical issues or abuse</li>
-        <li>To serve advertising, where enabled (see Section 4)</li>
+        <li>
+          Information you provide voluntarily, such as your email address when
+          subscribing to our newsletter or contacting us.
+        </li>
+        <li>
+          Technical information collected automatically, including your IP
+          address, browser type, device information, pages visited, and
+          referral source through cookies and similar technologies.
+        </li>
       </ul>
 
-      <h2>3. Cookies and tracking</h2>
+      <h2>2. How We Use Your Information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Operate and improve Scoop Room.</li>
+        <li>Deliver news updates and newsletters you subscribe to.</li>
+        <li>Understand how visitors use our website.</li>
+        <li>Protect the website against fraud, spam, and abuse.</li>
+        <li>Display advertising where applicable.</li>
+      </ul>
+
+      <h2>3. Cookies</h2>
       <p>
-        We use cookies for essential site functionality (such as remembering
-        your theme preference) and, where enabled, for analytics and
-        advertising. You can control cookies through your browser settings. See
-        our <a href="/cookies">Cookie Policy</a> for the full list of cookie
-        categories we use.
+        Scoop Room uses cookies to improve your browsing experience, remember
+        your preferences, measure website performance, and support
+        advertising. You can disable cookies at any time through your browser
+        settings.
       </p>
 
-      <h2>4. Third-party services</h2>
+      <h2>4. Third-Party Services</h2>
       <p>
-        We may use third-party services for analytics and advertising (for
-        example, Google AdSense). These providers may collect information about
-        your visits to this and other sites in order to serve relevant
-        advertising. These providers have their own privacy policies governing
-        their use of your information.
+        We may use trusted third-party services such as Google AdSense,
+        Google Analytics, and other service providers to help operate the
+        website. These services may collect information according to their
+        own privacy policies.
       </p>
 
-      <h2>5. Data sharing</h2>
+      <h2>5. Data Sharing</h2>
       <p>
-        We do not sell your personal information. We may share information with
-        service providers who help us operate the Site (such as hosting or
-        analytics providers), or where required by law.
+        We do not sell your personal information. We may share limited
+        information with trusted service providers that help operate the
+        website or when required by law.
       </p>
 
-      <h2>6. Data retention</h2>
+      <h2>6. Data Retention</h2>
       <p>
-        We retain information for as long as necessary to provide the Site and
-        fulfill the purposes described in this policy, unless a longer retention
-        period is required by law.
+        We keep personal information only for as long as necessary to provide
+        our services, comply with legal obligations, and protect our
+        platform.
       </p>
 
-      <h2>7. Your rights</h2>
+      <h2>7. Your Rights</h2>
       <p>
-        Depending on where you live, you may have rights to access, correct, or
-        delete your personal information, or to object to certain processing.
-        To exercise these rights, contact us at{" "}
-        <a href="mailto:privacy@scooproom.com">privacy@scooproom.com</a>.
+        Depending on your location, you may have the right to access,
+        correct, update, or delete your personal information. To make a
+        request, contact us using the email below.
       </p>
 
-      <h2>8. Children&apos;s privacy</h2>
+      <h2>8. Children&apos;s Privacy</h2>
       <p>
-        The Site is not directed at children under 13, and we do not knowingly
-        collect personal information from children under 13.
+        Scoop Room is not intended for children under the age of 13, and we
+        do not knowingly collect personal information from children.
       </p>
 
-      <h2>9. Changes to this policy</h2>
+      <h2>9. Changes to This Policy</h2>
       <p>
-        We may update this Privacy Policy from time to time. Material changes
-        will be reflected by an updated &quot;Last updated&quot; date at the top of this
-        page.
+        We may update this Privacy Policy from time to time. Any changes will
+        be posted on this page with the updated revision date.
       </p>
 
-      <h2>10. Contact us</h2>
+      <h2>10. Contact Us</h2>
       <p>
-        Questions about this policy? Email{" "}
-        <a href="mailto:privacy@scooproom.com">privacy@scooproom.com</a>.
+        If you have any questions about this Privacy Policy or your personal
+        information, please contact us:
+      </p>
+      <p>
+        Email:{" "}
+        <a href="mailto:scooproomhq@gmail.com">scooproomhq@gmail.com</a>
       </p>
 
       <hr />
       <p className="text-sm text-muted">
-        This page is a general template and is not a substitute for legal
-        advice. Review it with a lawyer familiar with the data protection laws
-        that apply to where your readers are located before relying on it.
+        Thank you for trusting Scoop Room — The People&apos;s Stories. Told
+        With Integrity.
       </p>
     </StaticPageLayout>
   );

@@ -1,3 +1,4 @@
+// Repo path: src/app/(site)/about/page.tsx
 import type { Metadata } from "next";
 import { StaticPageLayout } from "@/components/site/StaticPageLayout";
 import { site } from "@/lib/constants";
@@ -9,43 +10,82 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <StaticPageLayout title={`About ${site.name}`} subtitle={site.tagline}>
+    <StaticPageLayout
+      title="About Scoop Room"
+      subtitle="The People's Stories. Told With Integrity."
+    >
       <p>
-        {site.name} is a digital-first newsroom covering Nigeria, Africa, and the
-        wider world — politics, business, technology, entertainment, sports, and
-        culture. We exist to help readers understand what&apos;s happening, fast,
-        without sacrificing accuracy.
+        Scoop Room is an independent digital news and media platform
+        dedicated to delivering the stories that matter most. From breaking
+        news and public affairs to business, technology, entertainment,
+        sports, lifestyle, and the conversations shaping society, we keep
+        readers informed with speed, accuracy, and context.
+      </p>
+      <p>
+        Our mission is simple: deliver trusted information without
+        compromising integrity.
       </p>
 
-      <h2>What we do</h2>
+      <h2>What We Do</h2>
       <p>
-        Our newsroom combines wide, continuous monitoring of breaking news with
-        editorial review before anything is published. Stories are surfaced from a
-        broad set of sources, checked against our editorial standards, and
-        reviewed by a human editor before they appear on the site. Speed matters
-        to us, but not more than getting it right.
+        We monitor trusted news sources and emerging stories around the clock
+        to bring readers timely, relevant, and verified reporting. Every
+        story goes through editorial review before publication to ensure it
+        meets our standards for accuracy, fairness, and public interest.
+      </p>
+      <p>We believe being first is important—but being right is essential.</p>
+
+      <h2>What We Cover</h2>
+      <p>Scoop Room covers:</p>
+      <ul>
+        <li>Breaking News</li>
+        <li>Trending Stories</li>
+        <li>Politics &amp; Government</li>
+        <li>Business &amp; Economy</li>
+        <li>Technology &amp; AI</li>
+        <li>Entertainment &amp; Celebrity News</li>
+        <li>Sports</li>
+        <li>Lifestyle &amp; Culture</li>
+        <li>Crime &amp; Public Safety</li>
+        <li>Human Interest Stories</li>
+      </ul>
+      <p>
+        Our coverage begins with the stories that matter most to our audience
+        while keeping an eye on important developments around the world.
       </p>
 
-      <h2>What we cover</h2>
+      <h2>Our Editorial Values</h2>
+      <p>We are committed to:</p>
+      <ul>
+        <li>Accuracy before speculation.</li>
+        <li>Fair and balanced reporting.</li>
+        <li>Transparency when corrections are necessary.</li>
+        <li>Respect for facts, privacy, and human dignity.</li>
+        <li>Editorial independence from political and commercial influence.</li>
+      </ul>
+
+      <h2>Our Vision</h2>
       <p>
-        We report on the stories shaping Nigeria and Africa alongside global
-        politics, business, technology (including AI), entertainment, sports, and
-        lifestyle. Our coverage is organized so you can follow the beats that
-        matter to you specifically.
+        To build one of the world&apos;s most trusted digital-first news
+        platforms—connecting millions of people through reliable journalism,
+        meaningful storytelling, and responsible reporting.
       </p>
 
-      <h2>Editorial independence</h2>
+      <h2>Contact Us</h2>
       <p>
-        Our reporting and editorial decisions are made independently of
-        advertisers, sponsors, and any other commercial relationship. See our{" "}
-        <a href="/ethics">Newsroom Ethics</a> page for more on how we handle
-        sourcing, corrections, and conflicts of interest.
+        Have a news tip, correction, question, or partnership inquiry?
+        We&apos;d love to hear from you.
+      </p>
+      <p>
+        Email:{" "}
+        <a href="mailto:scooproomhq@gmail.com">scooproomhq@gmail.com</a>
+        <br />
+        Website: <a href="https://scooproomhq.com">https://scooproomhq.com</a>
       </p>
 
-      <h2>Get in touch</h2>
-      <p>
-        Have a tip, a correction, or a question about a story? Visit our{" "}
-        <a href="/contact">Contact</a> page — we read everything that comes in.
+      <hr />
+      <p className="text-sm text-muted">
+        Scoop Room — The People&apos;s Stories. Told With Integrity.
       </p>
     </StaticPageLayout>
   );

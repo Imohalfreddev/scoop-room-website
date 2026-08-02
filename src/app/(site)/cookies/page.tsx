@@ -1,99 +1,101 @@
+// Repo path: src/app/(site)/cookies/page.tsx
 import type { Metadata } from "next";
 import { StaticPageLayout } from "@/components/site/StaticPageLayout";
 import { site } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
-  description: `How ${site.name} uses cookies.`,
+  description: `How ${site.name} uses cookies and similar technologies.`,
 };
-
-const cookieTypes = [
-  {
-    name: "Essential",
-    example: "Theme preference, session/login state for the admin dashboard",
-    always: true,
-  },
-  {
-    name: "Analytics",
-    example: "Understanding aggregate traffic and readership patterns, where enabled",
-    always: false,
-  },
-  {
-    name: "Advertising",
-    example: "Serving and measuring ads via providers like Google AdSense, where enabled",
-    always: false,
-  },
-  {
-    name: "Preferences",
-    example: "Remembering settings like saved bookmarks",
-    always: false,
-  },
-];
 
 export default function CookiesPage() {
   return (
     <StaticPageLayout
       title="Cookie Policy"
-      subtitle="What cookies are, which ones we use, and how to control them."
-      updated="July 2026"
+      subtitle='This Cookie Policy explains how Scoop Room ("we," "our," or "us") uses cookies and similar technologies on https://scooproomhq.com.'
+      updated="August 2026"
     >
-      <h2>What are cookies?</h2>
+      <p>
+        By using our website, you agree to the use of cookies as described in
+        this policy.
+      </p>
+
+      <h2>1. What Are Cookies?</h2>
       <p>
         Cookies are small text files stored on your device when you visit a
-        website. They help the site remember information about your visit,
-        like your preferences, and can be used to understand how the site is
-        used.
+        website. They help websites function properly, remember your
+        preferences, improve performance, and provide a better browsing
+        experience.
       </p>
 
-      <h2>Cookies we use</h2>
-      <div className="not-prose overflow-hidden rounded-2xl border border-border">
-        <table className="w-full text-sm">
-          <thead className="bg-surface text-left">
-            <tr>
-              <th className="px-4 py-3 font-semibold">Category</th>
-              <th className="px-4 py-3 font-semibold">Used for</th>
-              <th className="px-4 py-3 font-semibold">Can be disabled?</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cookieTypes.map((c) => (
-              <tr key={c.name} className="border-t border-border">
-                <td className="px-4 py-3 font-medium">{c.name}</td>
-                <td className="px-4 py-3 text-foreground/70">{c.example}</td>
-                <td className="px-4 py-3 text-foreground/70">
-                  {c.always ? "No — required for the site to work" : "Yes, via your browser"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <h2>2. How We Use Cookies</h2>
+      <p>We use cookies to:</p>
+      <ul>
+        <li>Keep the website functioning properly.</li>
+        <li>Remember your preferences and settings.</li>
+        <li>Understand how visitors use our website.</li>
+        <li>Improve website performance and user experience.</li>
+        <li>Deliver relevant advertisements where applicable.</li>
+      </ul>
 
-      <h2>Third-party cookies</h2>
+      <h2>3. Types of Cookies We Use</h2>
+      <h3>Essential Cookies</h3>
       <p>
-        Where we use third-party services such as analytics or advertising
-        providers, those providers may set their own cookies subject to their
-        own privacy and cookie policies.
+        These cookies are necessary for the website to function correctly.
+        They support features such as login sessions, security, and website
+        functionality. These cookies cannot be disabled through our website.
+      </p>
+      <h3>Analytics Cookies</h3>
+      <p>
+        These cookies help us understand how visitors use Scoop Room by
+        collecting anonymous information about website traffic, page views,
+        and performance. This information helps us improve the website.
+      </p>
+      <h3>Preference Cookies</h3>
+      <p>
+        These cookies remember your settings and preferences, such as theme
+        selection, saved bookmarks, and other personalized features.
+      </p>
+      <h3>Advertising Cookies</h3>
+      <p>
+        If advertising is enabled, third-party providers such as Google
+        AdSense may use cookies to display relevant advertisements and
+        measure advertising performance.
       </p>
 
-      <h2>How to control cookies</h2>
+      <h2>4. Third-Party Cookies</h2>
       <p>
-        Most browsers let you block or delete cookies through their settings.
-        Blocking essential cookies may affect how parts of the Site work — for
-        example, your theme preference may not be remembered, or the admin
-        dashboard may not stay signed in.
+        Some third-party services used on Scoop Room, including analytics,
+        advertising, embedded videos, and social media features, may place
+        their own cookies on your device. These cookies are governed by the
+        privacy policies of the respective providers.
       </p>
 
-      <h2>Changes to this policy</h2>
+      <h2>5. Managing Cookies</h2>
       <p>
-        We may update this Cookie Policy as our use of cookies changes. Check
-        the &quot;Last updated&quot; date above for the most recent revision.
+        Most web browsers allow you to control, block, or delete cookies
+        through their settings. Please note that disabling essential cookies
+        may affect certain features of the website and limit your browsing
+        experience.
       </p>
 
-      <h2>Questions</h2>
+      <h2>6. Changes to This Policy</h2>
       <p>
-        Email <a href="mailto:privacy@scooproom.com">privacy@scooproom.com</a>{" "}
-        with any questions about this policy.
+        We may update this Cookie Policy from time to time to reflect changes
+        in our services, technology, or legal requirements. Any updates will
+        be posted on this page with a revised &quot;Last updated&quot; date.
+      </p>
+
+      <h2>7. Contact Us</h2>
+      <p>If you have any questions about this Cookie Policy, please contact us:</p>
+      <p>
+        Email:{" "}
+        <a href="mailto:scooproomhq@gmail.com">scooproomhq@gmail.com</a>
+      </p>
+
+      <hr />
+      <p className="text-sm text-muted">
+        Scoop Room — The People&apos;s Stories. Told With Integrity.
       </p>
     </StaticPageLayout>
   );
