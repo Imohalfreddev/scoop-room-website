@@ -21,8 +21,10 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
+  const [sceneVisible, setSceneVisible] = useState(true);
   const reducedMotion = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const goTo = useCallback((i: number) => {
     setIndex((i + slides.length) % slides.length);
@@ -37,17 +39,34 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
     };
   }, [index, paused, reducedMotion, goTo, slides.length]);
 
+  // The WebGL scene runs a continuous 60fps render loop while mounted —
+  // fine while it's the hero the user's actually looking at, wasteful (and
+  // a real contributor to scroll jank, since it keeps competing for the
+  // main thread) once they've scrolled well past it. Fully unmounting it
+  // out of view stops that render loop completely, not just visually.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setSceneVisible(entry.isIntersecting),
+      { rootMargin: "200px 0px" } // unmount a little before/after, not the instant it clips
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   if (!slides.length) return null;
   const active = slides[index];
 
   return (
     <section
+      ref={sectionRef}
       className="relative isolate flex min-h-[92svh] items-center overflow-hidden bg-ink text-white"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
-        <HeroScene reducedMotion={!!reducedMotion} />
+        {sceneVisible && <HeroScene reducedMotion={!!reducedMotion} />}
       </div>
       <div className="absolute inset-0 z-[1] bg-gradient-to-t from-ink via-ink/40 to-ink/70 pointer-events-none" />
 

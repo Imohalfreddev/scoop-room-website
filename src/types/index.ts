@@ -130,21 +130,6 @@ export interface NewsletterSubscriber {
   source?: string;
 }
 
-export interface WeatherData {
-  location: string;
-  tempC: number;
-  condition: string;
-  icon: string;
-  updatedAt: string;
-}
-
-export interface MarketQuote {
-  symbol: string;
-  name: string;
-  price: number;
-  changePercent: number;
-}
-
 export interface AnalyticsSnapshot {
   totalViews: number;
   totalArticles: number;

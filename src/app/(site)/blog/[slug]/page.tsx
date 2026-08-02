@@ -69,7 +69,7 @@ export default async function BlogPostPage({
       </div>
 
       <div
-        className="prose prose-lg max-w-none prose-headings:font-display prose-headings:font-semibold prose-a:text-signal dark:prose-invert"
+        className="prose max-w-none prose-headings:font-display prose-headings:font-semibold prose-a:text-signal dark:prose-invert sm:prose-lg"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 

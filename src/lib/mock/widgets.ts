@@ -1,21 +1,5 @@
-import type { AnalyticsSnapshot, MarketQuote, WeatherData } from "@/types";
+import type { AnalyticsSnapshot } from "@/types";
 import { articles } from "./articles";
-
-export const weatherMock: WeatherData = {
-  location: "Lagos, NG",
-  tempC: 29,
-  condition: "Partly Cloudy",
-  icon: "cloud-sun",
-  updatedAt: new Date().toISOString(),
-};
-
-export const marketsMock: MarketQuote[] = [
-  { symbol: "NGX-ASI", name: "NGX All-Share Index", price: 104213.5, changePercent: 0.62 },
-  { symbol: "USD/NGN", name: "US Dollar", price: 1542.3, changePercent: -0.14 },
-  { symbol: "BRENT", name: "Brent Crude", price: 82.47, changePercent: 1.08 },
-  { symbol: "BTC", name: "Bitcoin", price: 71230, changePercent: 2.31 },
-  { symbol: "GOLD", name: "Gold Spot", price: 2394.1, changePercent: 0.21 },
-];
 
 export const trendingSearches: string[] = [
   "Naira exchange rate",

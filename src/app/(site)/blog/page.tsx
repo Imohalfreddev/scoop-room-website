@@ -28,17 +28,21 @@ export default function BlogIndexPage() {
         </p>
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
         <div>
-          {lead && <ArticleCard article={lead} variant="featured" priority />}
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
+          {lead && (
+            <div className="aspect-[16/9] sm:aspect-[21/9]">
+              <ArticleCard article={lead} variant="featured" priority />
+            </div>
+          )}
+          <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:mt-10 sm:grid-cols-2 2xl:grid-cols-3">
             {rest.map((post) => (
               <ArticleCard key={post.id} article={post} />
             ))}
           </div>
         </div>
 
-        <aside>
+        <aside className="lg:pt-2">
           <div className="rounded-2xl border border-border p-5">
             <p className="wire mb-3 pl-3 font-mono text-[11px] font-semibold uppercase tracking-widest text-muted">
               Popular posts
