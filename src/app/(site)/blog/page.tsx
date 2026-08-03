@@ -49,12 +49,12 @@ export default async function BlogIndexPage() {
           )}
           {lead && (
             <div className="aspect-[16/9] sm:aspect-[21/9]">
-              <ArticleCard article={lead} variant="featured" priority />
+              <ArticleCard article={lead} variant="featured" priority basePath="/blog" />
             </div>
           )}
           <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:mt-10 sm:grid-cols-2 2xl:grid-cols-3">
             {rest.map((post) => (
-              <ArticleCard key={post.id} article={post} />
+              <ArticleCard key={post.id} article={post} basePath="/blog" />
             ))}
           </div>
         </div>

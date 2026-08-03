@@ -82,7 +82,7 @@ export default async function BlogPostPage({
       </div>
 
       <div className="mt-14">
-        <RelatedArticles articles={related} />
+        <RelatedArticles articles={related} basePath="/blog" />
       </div>
 
       <div className="mt-14">

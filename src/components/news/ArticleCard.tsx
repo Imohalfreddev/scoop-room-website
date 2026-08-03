@@ -12,16 +12,19 @@ export function ArticleCard({
   variant = "standard",
   priority = false,
   index,
+  basePath = "/article",
 }: {
   article: Article;
   variant?: Variant;
   priority?: boolean;
   index?: number;
+  /** News articles live at /article/[slug], blog posts at /blog/[slug]. */
+  basePath?: string;
 }) {
   if (variant === "list") {
     return (
       <Link
-        href={`/article/${article.slug}`}
+        href={`${basePath}/${article.slug}`}
         className="group flex items-start gap-4 border-b border-border py-4 last:border-0"
       >
         {typeof index === "number" && (
@@ -44,7 +47,7 @@ export function ArticleCard({
 
   if (variant === "compact") {
     return (
-      <Link href={`/article/${article.slug}`} className="group flex gap-3">
+      <Link href={`${basePath}/${article.slug}`} className="group flex gap-3">
         <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-surface">
           <Image src={article.coverImage} alt={article.title} fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" />
         </div>
@@ -62,7 +65,7 @@ export function ArticleCard({
   if (variant === "featured") {
     return (
       <Link
-        href={`/article/${article.slug}`}
+        href={`${basePath}/${article.slug}`}
         className="group relative block h-full overflow-hidden rounded-2xl bg-ink"
       >
         <Image
@@ -90,7 +93,7 @@ export function ArticleCard({
   }
 
   return (
-    <Link href={`/article/${article.slug}`} className="group block">
+    <Link href={`${basePath}/${article.slug}`} className="group block">
       <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-xl bg-surface">
         <Image
           src={article.coverImage}
