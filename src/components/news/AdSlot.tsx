@@ -31,9 +31,10 @@ import { cn } from "@/lib/utils";
  *
  * For a leaderboard slot specifically, export creative at the matching IAB
  * size for best results (320x50 mobile, 468x60 small, 728x90 desktop,
- * 970x90 large desktop). object-contain is used so any creative that
- * doesn't exactly match still displays in full (no cropping) rather than
- * being cut off; it'll just show with empty space on the sides.
+ * 970x90 large desktop). The image uses object-cover, so it always fills
+ * the slot edge-to-edge with no empty space — if the source creative's
+ * ratio doesn't exactly match the slot's ratio, the excess is cropped
+ * (centered) rather than shrunk down with gutters on the sides.
  */
 
 type Sizing = { ratio: string; maxWidth: string };
@@ -168,7 +169,7 @@ export function AdSlot({
         <img
           src={current.imageUrl}
           alt={current.advertiser ?? "Sponsored"}
-          className="h-full w-full object-contain"
+          className="h-full w-full object-cover object-center"
           loading="lazy"
           decoding="async"
         />
