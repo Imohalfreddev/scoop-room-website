@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { blogPosts, popularBlogPosts } from "@/lib/mock/blog";
 import { ArticleCard } from "@/components/news/ArticleCard";
+import { AdSlot } from "@/components/news/AdSlot";
+import { getAdSlotConfigs } from "@/lib/api/adSlots";
+import { trendingSearches } from "@/lib/mock/widgets";
 import { formatNumber } from "@/lib/utils";
+import { Flame } from "lucide-react";
 import Link from "next/link";
 import { site } from "@/lib/constants";
 
@@ -11,8 +15,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
   const [lead, ...rest] = blogPosts;
+  const sidebarAds = await getAdSlotConfigs("sidebar");
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
@@ -42,7 +47,7 @@ export default function BlogIndexPage() {
           </div>
         </div>
 
-        <aside className="lg:pt-2">
+        <aside className="sticky top-24 h-fit max-h-[calc(100vh-7rem)] space-y-8 overflow-y-auto pb-2 lg:pt-2">
           <div className="rounded-2xl border border-border p-5">
             <p className="wire mb-3 pl-3 font-mono text-[11px] font-semibold uppercase tracking-widest text-muted">
               Popular posts
@@ -65,6 +70,28 @@ export default function BlogIndexPage() {
               ))}
             </ol>
           </div>
+
+          <div className="rounded-2xl border border-border p-5">
+            <div className="mb-3 flex items-center gap-1.5">
+              <Flame size={14} className="text-signal" />
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-muted">
+                Trending searches
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {trendingSearches.map((s) => (
+                <Link
+                  key={s}
+                  href={`/search?q=${encodeURIComponent(s)}`}
+                  className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80 transition hover:border-signal hover:text-signal"
+                >
+                  {s}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <AdSlot placement="sidebar" configs={sidebarAds} />
         </aside>
       </div>
     </div>
