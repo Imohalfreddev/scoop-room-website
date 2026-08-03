@@ -17,6 +17,7 @@ function Shard({
   scale,
   speed,
   color,
+  emissive,
   seed,
 }: {
   position: [number, number, number];
@@ -24,6 +25,7 @@ function Shard({
   scale: number;
   speed: number;
   color: string;
+  emissive: string;
   seed: number;
 }) {
   const ref = useRef<THREE.Mesh>(null);
@@ -43,11 +45,13 @@ function Shard({
       <meshPhysicalMaterial
         color={color}
         transparent
-        opacity={0.14}
+        opacity={0.45}
         roughness={0.15}
         metalness={0.1}
-        transmission={0.6}
+        transmission={0.35}
         thickness={0.4}
+        emissive={emissive}
+        emissiveIntensity={0.6}
         side={THREE.DoubleSide}
       />
     </mesh>
@@ -76,7 +80,7 @@ function Particles({ count = 140 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.02} color="#ffffff" transparent opacity={0.35} />
+      <pointsMaterial size={0.026} color="#ff3b4a" transparent opacity={0.55} />
     </points>
   );
 }
@@ -100,12 +104,12 @@ export default function HeroScene({ reducedMotion = false }: { reducedMotion?: b
     >
       <ambientLight intensity={0.6} />
       <pointLight position={[4, 3, 4]} intensity={40} color="#ff3b4a" />
-      <pointLight position={[-4, -2, 3]} intensity={20} color="#ffffff" />
+      <pointLight position={[-4, -2, 3]} intensity={18} color="#ffd9d9" />
 
-      <Shard position={[-2.6, 0.6, -1]} rotation={[0.1, 0.4, 0]} scale={1.15} speed={0.5} color="#e30613" seed={1} />
-      <Shard position={[2.8, -0.4, -1.6]} rotation={[-0.15, -0.5, 0.1]} scale={1.4} speed={0.4} color="#111111" seed={2} />
-      <Shard position={[0.4, 1.4, -2.4]} rotation={[0.2, 0.1, -0.1]} scale={1.05} speed={0.6} color="#ffffff" seed={3} />
-      <Shard position={[-1.2, -1.3, -1.8]} rotation={[-0.1, 0.2, 0.05]} scale={0.9} speed={0.55} color="#e30613" seed={4} />
+      <Shard position={[-2.6, 0.6, -1]} rotation={[0.1, 0.4, 0]} scale={1.15} speed={0.5} color="#e30613" emissive="#e30613" seed={1} />
+      <Shard position={[2.8, -0.4, -1.6]} rotation={[-0.15, -0.5, 0.1]} scale={1.4} speed={0.4} color="#8c0c14" emissive="#8c0c14" seed={2} />
+      <Shard position={[0.4, 1.4, -2.4]} rotation={[0.2, 0.1, -0.1]} scale={1.05} speed={0.6} color="#ff6b75" emissive="#ff3b4a" seed={3} />
+      <Shard position={[-1.2, -1.3, -1.8]} rotation={[-0.1, 0.2, 0.05]} scale={0.9} speed={0.55} color="#b3101d" emissive="#b3101d" seed={4} />
 
       <Particles />
       <Rig reducedMotion={reducedMotion} />
