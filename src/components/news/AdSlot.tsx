@@ -18,14 +18,16 @@ import { cn } from "@/lib/utils";
  * Sponsored posts and affiliate placements can reuse this same component
  * by passing `configs` with an image + href per slide.
  *
- * Sizing: the image displays at its natural aspect ratio, full width, with
- * object-contain so nothing ever gets cropped — but capped at a max height
- * per placement so an oddly-shaped creative (e.g. a near-square graphic in
- * a wide leaderboard slot) can't balloon the layout. For a leaderboard slot
- * specifically, ad creative should ideally be exported at roughly a 4:1
- * ratio (e.g. 1200x300px) so it fills the width without hitting that cap —
- * this is a design/export concern on the image itself, not something CSS
- * can fully solve for a square or portrait image.
+ * Sizing: each placement gets a fixed height (not max-height — percentage
+ * sizing on the image needs a real height to resolve against, or browsers
+ * fall back to the image's natural size and overflow gets clipped). The
+ * image itself uses object-contain within that box so it's never cropped —
+ * an oddly-shaped creative (e.g. a near-square graphic in a wide leaderboard
+ * slot) just shows smaller with empty space on the sides rather than being
+ * cut off. For a leaderboard slot specifically, ad creative should ideally
+ * be exported at roughly a 4:1 ratio (e.g. 1200x300px) so it fills the
+ * width edge-to-edge — that's a design/export concern on the image itself,
+ * not something CSS alone can solve for a square or portrait source image.
  */
 export function AdSlot({
   placement,
@@ -62,14 +64,19 @@ export function AdSlot({
     setVisible(true);
   }, [slides.length]);
 
-  const maxHeight =
+  // Scales up per breakpoint (mobile → tablet → desktop) so it looks
+  // proportionate on every device, same as it already does on mobile.
+  // Each value here is a real fixed height (not max-height) — that's what
+  // avoids the top/bottom clipping bug from before, regardless of how many
+  // breakpoints there are.
+  const height =
     placement === "leaderboard"
-      ? "max-h-32 sm:max-h-40"
+      ? "h-20 sm:h-28 lg:h-32"
       : placement === "in-article"
-        ? "max-h-40 sm:max-h-52"
+        ? "h-24 sm:h-32 lg:h-36"
         : placement === "sponsored-post"
-          ? "max-h-72"
-          : "max-h-96";
+          ? "h-48 sm:h-56 lg:h-64"
+          : "h-56 sm:h-64 lg:h-72";
 
   if (slides.length === 0) {
     const placeholderAspect =
@@ -103,7 +110,7 @@ export function AdSlot({
     <div
       className={cn(
         "relative flex w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface",
-        maxHeight,
+        height,
         className
       )}
       onMouseEnter={() => setPaused(true)}
