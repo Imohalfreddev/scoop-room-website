@@ -18,9 +18,11 @@ import { cn } from "@/lib/utils";
  * Sponsored posts and affiliate placements can reuse this same component
  * by passing `configs` with an image + href per slide.
  *
- * Sizing uses aspect-ratio (not a fixed height) so arbitrary ad creative —
- * square, portrait, or wide banner — always displays in full via
- * object-contain rather than getting cropped by object-cover.
+ * Sizing: rather than forcing every ad creative into one fixed aspect
+ * ratio (which either crops it or letterboxes it with empty space), the
+ * image renders at its own natural width-to-height ratio, full width, no
+ * gaps either side. Only the placeholder (no ads yet) uses a fixed-height
+ * box, since there's no image to size from.
  */
 export function AdSlot({
   placement,
@@ -35,12 +37,17 @@ export function AdSlot({
 }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(true);
   const slides = configs.filter((c) => c.imageUrl);
 
   useEffect(() => {
     if (slides.length < 2 || paused) return;
     const timer = setInterval(() => {
-      setIndex((i) => (i + 1) % slides.length);
+      setVisible(false);
+      setTimeout(() => {
+        setIndex((i) => (i + 1) % slides.length);
+        setVisible(true);
+      }, 300);
     }, rotateMs);
     return () => clearInterval(timer);
   }, [slides.length, paused, rotateMs]);
@@ -49,23 +56,24 @@ export function AdSlot({
   // loaded) so `index` never points past the end of a shorter array.
   useEffect(() => {
     setIndex(0);
+    setVisible(true);
   }, [slides.length]);
 
-  const aspect =
-    placement === "leaderboard"
-      ? "aspect-[4/1] sm:aspect-[6/1]"
-      : placement === "in-article"
-        ? "aspect-[3/1] sm:aspect-[4/1]"
-        : placement === "sponsored-post"
-          ? "aspect-[16/9]"
-          : "aspect-square";
-
   if (slides.length === 0) {
+    const placeholderAspect =
+      placement === "leaderboard"
+        ? "aspect-[4/1] sm:aspect-[6/1]"
+        : placement === "in-article"
+          ? "aspect-[3/1] sm:aspect-[4/1]"
+          : placement === "sponsored-post"
+            ? "aspect-[16/9]"
+            : "aspect-square";
+
     return (
       <div
         className={cn(
           "flex w-full flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-border bg-surface text-muted",
-          aspect,
+          placeholderAspect,
           className
         )}
       >
@@ -77,37 +85,30 @@ export function AdSlot({
     );
   }
 
+  const current = slides[index];
+
   return (
     <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-2xl border border-border bg-surface",
-        aspect,
-        className
-      )}
+      className={cn("relative w-full overflow-hidden rounded-2xl border border-border", className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {slides.map((slide, i) => (
-        <a
-          key={slide.id}
-          href={slide.href ?? "#"}
-          rel="sponsored noopener"
-          target="_blank"
-          className={cn(
-            "absolute inset-0 flex items-center justify-center transition-opacity duration-700",
-            i === index ? "opacity-100" : "pointer-events-none opacity-0"
-          )}
-          aria-hidden={i !== index}
-          tabIndex={i === index ? 0 : -1}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={slide.imageUrl}
-            alt={slide.advertiser ?? "Sponsored"}
-            className="size-full object-contain"
-          />
-        </a>
-      ))}
+      <a
+        href={current.href ?? "#"}
+        rel="sponsored noopener"
+        target="_blank"
+        className={cn(
+          "block w-full transition-opacity duration-300",
+          visible ? "opacity-100" : "opacity-0"
+        )}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={current.imageUrl}
+          alt={current.advertiser ?? "Sponsored"}
+          className="h-auto w-full object-contain"
+        />
+      </a>
 
       {slides.length > 1 && (
         <div className="absolute inset-x-0 bottom-2 flex items-center justify-center gap-1.5">
@@ -115,7 +116,13 @@ export function AdSlot({
             <button
               key={slide.id}
               type="button"
-              onClick={() => setIndex(i)}
+              onClick={() => {
+                setVisible(false);
+                setTimeout(() => {
+                  setIndex(i);
+                  setVisible(true);
+                }, 300);
+              }}
               aria-label={`Show ad ${i + 1} of ${slides.length}`}
               className={cn(
                 "h-1.5 rounded-full transition-all",

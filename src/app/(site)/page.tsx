@@ -68,20 +68,19 @@ export default async function HomePage() {
 
       <TrendingRail articles={trending} />
 
+      {/* Ad 1 of 2 — top of feed. */}
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <AdSlot placement="leaderboard" configs={leaderboardAds} />
       </div>
 
-      {showcases.map(({ category, items }, i) => (
-        <div key={category.id}>
-          <CategoryShowcase category={category} articles={items} />
-          {(i + 1) % 3 === 0 && (
-            <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-              <AdSlot placement="leaderboard" configs={leaderboardAds} />
-            </div>
-          )}
-        </div>
+      {showcases.map(({ category, items }) => (
+        <CategoryShowcase key={category.id} category={category} articles={items} />
       ))}
+
+      {/* Ad 2 of 2 — after all category sections, standing alone. */}
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <AdSlot placement="leaderboard" configs={leaderboardAds} />
+      </div>
 
       <NewsletterCTA />
     </>
