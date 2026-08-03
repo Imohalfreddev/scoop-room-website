@@ -18,58 +18,15 @@ import { cn } from "@/lib/utils";
  * Sponsored posts and affiliate placements can reuse this same component
  * by passing `configs` with an image + href per slide.
  *
- * SIZING: each placement is locked to an IAB-standard aspect ratio (not a
- * fixed pixel height) via `getSlotSizing` below, capped with a max-width so
- * creative never scales up past its native resolution. Because the empty
- * placeholder and the loaded slide both pull from that same function, the
- * box is *always* the same shape — swapping a placeholder out for a real ad
- * never shifts layout (the old fixed-height version could change shape
- * between states, which is a CLS/layout-shift bug). The aspect-ratio also
- * makes the box correctly responsive inside any container width, not just
- * at breakpoints — a narrow sidebar and a full-width hero both resolve to
- * the right shape automatically.
- *
- * For a leaderboard slot specifically, export creative at the matching IAB
- * size for best results (320x50 mobile, 468x60 small, 728x90 desktop,
- * 970x90 large desktop). The image uses object-cover, so it always fills
- * the slot edge-to-edge with no empty space — if the source creative's
- * ratio doesn't exactly match the slot's ratio, the excess is cropped
- * (centered) rather than shrunk down with gutters on the sides.
+ * Sizing: the image displays at its natural aspect ratio, full width, with
+ * object-contain so nothing ever gets cropped — but capped at a max height
+ * per placement so an oddly-shaped creative (e.g. a near-square graphic in
+ * a wide leaderboard slot) can't balloon the layout. For a leaderboard slot
+ * specifically, ad creative should ideally be exported at roughly a 4:1
+ * ratio (e.g. 1200x300px) so it fills the width without hitting that cap —
+ * this is a design/export concern on the image itself, not something CSS
+ * can fully solve for a square or portrait image.
  */
-
-type Sizing = { ratio: string; maxWidth: string };
-
-function getSlotSizing(placement: AdSlotConfig["placement"]): Sizing {
-  if (placement === "leaderboard") {
-    // IAB leaderboard sizes: 320x50 (mobile) -> 468x60 -> 728x90 -> 970x90
-    return {
-      ratio:
-        "aspect-[320/50] sm:aspect-[468/60] lg:aspect-[728/90] xl:aspect-[970/90]",
-      maxWidth: "max-w-[320px] sm:max-w-[468px] lg:max-w-[728px] xl:max-w-[970px]",
-    };
-  }
-  if (placement === "in-article") {
-    // 300x250 and 336x280 (IAB medium/large rectangle) share a 6:5 ratio,
-    // so a single aspect class covers both sizes — only max-width grows.
-    return {
-      ratio: "aspect-[300/250]",
-      maxWidth: "max-w-[300px] sm:max-w-[336px]",
-    };
-  }
-  if (placement === "sponsored-post") {
-    // Native/content-card style unit — landscape thumbnail ratio.
-    return {
-      ratio: "aspect-[16/9]",
-      maxWidth: "max-w-[480px] sm:max-w-[600px]",
-    };
-  }
-  // Fallback: IAB square (250x250) / large square (300x300)
-  return {
-    ratio: "aspect-square",
-    maxWidth: "max-w-[250px] sm:max-w-[300px]",
-  };
-}
-
 export function AdSlot({
   placement,
   configs = [],
@@ -85,18 +42,9 @@ export function AdSlot({
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
   const slides = configs.filter((c) => c.imageUrl);
-  const { ratio, maxWidth } = getSlotSizing(placement);
 
   useEffect(() => {
     if (slides.length < 2 || paused) return;
-    // Respect prefers-reduced-motion: don't auto-rotate for users who've
-    // asked their OS/browser to minimize motion.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
     const timer = setInterval(() => {
       setVisible(false);
       setTimeout(() => {
@@ -114,16 +62,30 @@ export function AdSlot({
     setVisible(true);
   }, [slides.length]);
 
-  const pause = () => setPaused(true);
-  const resume = () => setPaused(false);
+  const maxHeight =
+    placement === "leaderboard"
+      ? "max-h-32 sm:max-h-40"
+      : placement === "in-article"
+        ? "max-h-40 sm:max-h-52"
+        : placement === "sponsored-post"
+          ? "max-h-72"
+          : "max-h-96";
 
   if (slides.length === 0) {
+    const placeholderAspect =
+      placement === "leaderboard"
+        ? "aspect-[4/1] sm:aspect-[6/1]"
+        : placement === "in-article"
+          ? "aspect-[3/1] sm:aspect-[4/1]"
+          : placement === "sponsored-post"
+            ? "aspect-[16/9]"
+            : "aspect-square";
+
     return (
       <div
         className={cn(
-          "mx-auto flex w-full flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-border bg-surface text-muted",
-          ratio,
-          maxWidth,
+          "flex w-full flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-border bg-surface text-muted",
+          placeholderAspect,
           className
         )}
       >
@@ -135,30 +97,21 @@ export function AdSlot({
     );
   }
 
-  // Fallback to the first slide if index is transiently out of range
-  // (e.g. one render between slides shrinking and the reset effect firing).
-  const current = slides[index] ?? slides[0];
+  const current = slides[index];
 
   return (
     <div
-      role="group"
-      aria-label="Advertisement"
       className={cn(
-        "relative mx-auto flex w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface",
-        ratio,
-        maxWidth,
+        "relative flex w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface",
+        maxHeight,
         className
       )}
-      onMouseEnter={pause}
-      onMouseLeave={resume}
-      onTouchStart={pause}
-      onTouchEnd={resume}
-      onFocus={pause}
-      onBlur={resume}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <a
         href={current.href ?? "#"}
-        rel="sponsored noopener noreferrer"
+        rel="sponsored noopener"
         target="_blank"
         className={cn(
           "flex h-full w-full items-center justify-center transition-opacity duration-300",
@@ -169,9 +122,7 @@ export function AdSlot({
         <img
           src={current.imageUrl}
           alt={current.advertiser ?? "Sponsored"}
-          className="h-full w-full object-cover object-center"
-          loading="lazy"
-          decoding="async"
+          className="h-full w-full object-contain"
         />
       </a>
 
@@ -189,7 +140,6 @@ export function AdSlot({
                 }, 300);
               }}
               aria-label={`Show ad ${i + 1} of ${slides.length}`}
-              aria-current={i === index}
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 i === index ? "w-4 bg-signal" : "w-1.5 bg-foreground/30"
