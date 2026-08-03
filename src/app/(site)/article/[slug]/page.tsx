@@ -14,7 +14,7 @@ import { Gallery } from "@/components/news/Gallery";
 import { VideoPlayer } from "@/components/news/VideoPlayer";
 import { CommentSection } from "@/components/news/CommentSection";
 import { AdSlot } from "@/components/news/AdSlot";
-import { getAdSlotConfig } from "@/lib/api/adSlots";
+import { getAdSlotConfigs } from "@/lib/api/adSlots";
 import { RecordReadingHistory } from "@/components/news/RecordReadingHistory";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, newsArticleJsonLd } from "@/lib/seo/jsonld";
@@ -67,7 +67,7 @@ export default async function ArticlePage({
   const data = await getArticleBySlug(slug);
   if (!data) notFound();
   const { article, related } = data;
-  const inArticleAd = await getAdSlotConfig("in-article");
+  const inArticleAds = await getAdSlotConfigs("in-article");
   const url = `${site.url}/article/${article.slug}`;
 
   return (
@@ -118,7 +118,7 @@ export default async function ArticlePage({
       {article.videoUrl && <VideoPlayer src={article.videoUrl} poster={article.coverImage} />}
       {article.gallery && <Gallery images={article.gallery} />}
 
-      <AdSlot placement="in-article" config={inArticleAd} className="my-10" />
+      <AdSlot placement="in-article" configs={inArticleAds} className="my-10" />
 
       <div className="mt-8">
         <TagList tags={article.tags} />

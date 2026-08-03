@@ -7,7 +7,7 @@ import { CategoryShowcase } from "@/components/home/CategoryShowcase";
 import { NewsletterCTA } from "@/components/home/NewsletterCTA";
 import { SidebarWidgets } from "@/components/home/SidebarWidgets";
 import { AdSlot } from "@/components/news/AdSlot";
-import { getAdSlotConfig } from "@/lib/api/adSlots";
+import { getAdSlotConfigs } from "@/lib/api/adSlots";
 import {
   getFeaturedArticles,
   getTrendingArticles,
@@ -26,11 +26,11 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featured, trending, latest, leaderboardAd] = await Promise.all([
+  const [featured, trending, latest, leaderboardAds] = await Promise.all([
     getFeaturedArticles(6),
     getTrendingArticles(8),
     getLatestArticles(9, 1),
-    getAdSlotConfig("leaderboard"),
+    getAdSlotConfigs("leaderboard"),
   ]);
 
   const showcaseSlugs = [
@@ -69,7 +69,7 @@ export default async function HomePage() {
       <TrendingRail articles={trending} />
 
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-        <AdSlot placement="leaderboard" config={leaderboardAd} />
+        <AdSlot placement="leaderboard" configs={leaderboardAds} />
       </div>
 
       {showcases.map(({ category, items }, i) => (
@@ -77,7 +77,7 @@ export default async function HomePage() {
           <CategoryShowcase category={category} articles={items} />
           {(i + 1) % 3 === 0 && (
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-              <AdSlot placement="leaderboard" config={leaderboardAd} />
+              <AdSlot placement="leaderboard" configs={leaderboardAds} />
             </div>
           )}
         </div>

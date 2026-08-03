@@ -4,12 +4,12 @@ import { getTrendingArticles } from "@/lib/api/articles";
 import { trendingSearches } from "@/lib/mock/widgets";
 import { formatNumber } from "@/lib/utils";
 import { AdSlot } from "@/components/news/AdSlot";
-import { getAdSlotConfig } from "@/lib/api/adSlots";
+import { getAdSlotConfigs } from "@/lib/api/adSlots";
 
 export async function SidebarWidgets() {
-  const [popular, sidebarAd] = await Promise.all([
+  const [popular, sidebarAds] = await Promise.all([
     getTrendingArticles(5),
-    getAdSlotConfig("sidebar"),
+    getAdSlotConfigs("sidebar"),
   ]);
 
   return (
@@ -59,7 +59,7 @@ export async function SidebarWidgets() {
         </div>
       </div>
 
-      <AdSlot placement="sidebar" config={sidebarAd} />
+      <AdSlot placement="sidebar" configs={sidebarAds} />
     </aside>
   );
 }
