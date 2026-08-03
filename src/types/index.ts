@@ -84,6 +84,8 @@ export interface Comment {
   createdAt: string;
 }
 
+export type ArticleType = "NEWS" | "BLOG";
+
 export interface Article {
   id: string;
   slug: string;
@@ -98,6 +100,8 @@ export interface Article {
   tags: Tag[];
   author: Author;
   status: ArticleStatus;
+  /** Defaults to NEWS when not set (mock/demo articles predate this field). */
+  type?: ArticleType;
   featured: boolean;
   trending: boolean;
   sponsored?: boolean;
@@ -143,7 +147,7 @@ export interface AdSlotConfig {
   id: string;
   placement: "leaderboard" | "in-article" | "sidebar" | "sponsored-post";
   label: string;
-  imageUrl?: string;
+  images: string[];
   href?: string;
   advertiser?: string;
   active: boolean;

@@ -78,6 +78,7 @@ function mapArticle(a: FullDbArticle): Article {
       twitter: a.author.twitter ?? undefined,
     },
     status: STATUS_TO_SITE[a.status],
+    type: a.type,
     featured: a.featured,
     trending: a.trending,
     sponsored: a.sponsored,
@@ -119,6 +120,7 @@ export async function searchArticlesDb(
 
   const where = {
     status: "PUBLISHED" as const,
+    type: "NEWS" as const,
     ...(category ? { category: { slug: category } } : {}),
     ...(from || to
       ? {
@@ -167,6 +169,7 @@ export async function queryArticlesDb(
 
   const where = {
     status: "PUBLISHED" as const,
+    type: "NEWS" as const,
     ...(category ? { category: { slug: category } } : {}),
     ...(tag ? { tags: { some: { slug: tag } } } : {}),
     ...(featured ? { featured: true } : {}),
@@ -204,8 +207,8 @@ export async function queryArticlesDb(
 export async function getArticleWithRelatedDb(
   slug: string
 ): Promise<{ article: Article; related: Article[] } | null> {
-  const row = await prisma.article.findUnique({
-    where: { slug },
+  const row = await prisma.article.findFirst({
+    where: { slug, type: "NEWS" },
     include: includeRelations,
   });
   if (!row) return null;
@@ -213,6 +216,60 @@ export async function getArticleWithRelatedDb(
   const relatedRows = await prisma.article.findMany({
     where: {
       status: "PUBLISHED",
+      type: "NEWS",
+      categoryId: row.categoryId,
+      id: { not: row.id },
+    },
+    include: includeRelations,
+    orderBy: { publishedAt: "desc" },
+    take: 4,
+  });
+
+  return { article: mapArticle(row), related: relatedRows.map(mapArticle) };
+}
+
+/** Public /blog listing — published blog posts only, newest first. */
+export async function getBlogArticlesDb(
+  query: { page?: number; pageSize?: number } = {}
+): Promise<ArticleListResult> {
+  const { page = 1, pageSize = 24 } = query;
+
+  const where = { status: "PUBLISHED" as const, type: "BLOG" as const };
+
+  const [total, rows] = await Promise.all([
+    prisma.article.count({ where }),
+    prisma.article.findMany({
+      where,
+      include: includeRelations,
+      orderBy: { publishedAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ]);
+
+  return {
+    items: rows.map(mapArticle),
+    total,
+    page,
+    pageSize,
+    hasMore: (page - 1) * pageSize + rows.length < total,
+  };
+}
+
+/** Public /blog/[slug] page — a single published blog post plus related posts. */
+export async function getBlogArticleWithRelatedDb(
+  slug: string
+): Promise<{ article: Article; related: Article[] } | null> {
+  const row = await prisma.article.findFirst({
+    where: { slug, type: "BLOG" },
+    include: includeRelations,
+  });
+  if (!row) return null;
+
+  const relatedRows = await prisma.article.findMany({
+    where: {
+      status: "PUBLISHED",
+      type: "BLOG",
       categoryId: row.categoryId,
       id: { not: row.id },
     },

@@ -23,7 +23,7 @@ export async function getAdSlotConfigs(
     id: row.id,
     placement: row.placement as AdSlotConfig["placement"],
     label: row.label,
-    imageUrl: row.imageUrl ?? undefined,
+    images: row.images,
     href: row.href ?? undefined,
     advertiser: row.advertiser ?? undefined,
     active: row.active,

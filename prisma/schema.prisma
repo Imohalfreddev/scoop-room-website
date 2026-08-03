@@ -27,6 +27,11 @@ enum ArticleStatus {
   PUBLISHED
 }
 
+enum ArticleType {
+  NEWS
+  BLOG
+}
+
 enum MediaType {
   IMAGE
   VIDEO
@@ -117,6 +122,7 @@ model Article {
   author           User          @relation(fields: [authorId], references: [id])
 
   status           ArticleStatus @default(DRAFT)
+  type             ArticleType   @default(NEWS)
   featured         Boolean       @default(false)
   trending         Boolean       @default(false)
   sponsored        Boolean       @default(false)
@@ -138,6 +144,7 @@ model Article {
   comments         Comment[]
 
   @@index([status, publishedAt])
+  @@index([type, status, publishedAt])
   @@index([categoryId])
   @@map("articles")
 }
@@ -176,13 +183,13 @@ model PushSubscription {
 }
 
 model AdSlotConfig {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   placement  String
   label      String
-  imageUrl   String?
+  images     String[] @default([])
   href       String?
   advertiser String?
-  active     Boolean @default(true)
+  active     Boolean  @default(true)
 
   @@map("ad_slot_configs")
 }

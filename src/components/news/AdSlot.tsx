@@ -16,7 +16,13 @@ import { cn } from "@/lib/utils";
  *      block for the given `placement`, keeping the same wrapper sizing.
  *
  * Sponsored posts and affiliate placements can reuse this same component
- * by passing `configs` with an image + href per slide.
+ * by passing `configs` with one or more images + an href per slide.
+ *
+ * Each ad config can hold several pictures (e.g. a rotating product
+ * lineup for one advertiser). Every picture from every active config for
+ * this placement is flattened into a single slide list, so a placement
+ * with 2 ads of 3 pictures each auto-slides through all 6 in sequence,
+ * keeping that picture's own click-through link and advertiser label.
  *
  * Sizing: the image displays at its natural aspect ratio, full width, with
  * object-contain so nothing ever gets cropped — but capped at a max height
@@ -27,6 +33,13 @@ import { cn } from "@/lib/utils";
  * this is a design/export concern on the image itself, not something CSS
  * can fully solve for a square or portrait image.
  */
+interface AdSlide {
+  key: string;
+  imageUrl: string;
+  href?: string;
+  advertiser?: string;
+}
+
 export function AdSlot({
   placement,
   configs = [],
@@ -41,7 +54,14 @@ export function AdSlot({
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
-  const slides = configs.filter((c) => c.imageUrl);
+  const slides: AdSlide[] = configs.flatMap((c) =>
+    c.images.map((imageUrl, i) => ({
+      key: `${c.id}-${i}`,
+      imageUrl,
+      href: c.href,
+      advertiser: c.advertiser,
+    }))
+  );
 
   useEffect(() => {
     if (slides.length < 2 || paused) return;
@@ -130,7 +150,7 @@ export function AdSlot({
         <div className="absolute inset-x-0 bottom-2 flex items-center justify-center gap-1.5">
           {slides.map((slide, i) => (
             <button
-              key={slide.id}
+              key={slide.key}
               type="button"
               onClick={() => {
                 setVisible(false);

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { blogPostBySlug, blogPosts, relatedBlogPosts } from "@/lib/mock/blog";
+import { getBlogPostBySlug } from "@/lib/api/articles";
 import { CategoryPill, ArticleMeta } from "@/components/news/ArticleMeta";
 import { ShareBar } from "@/components/news/ShareBar";
 import { TagList } from "@/components/news/TagList";
@@ -12,18 +12,15 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, newsArticleJsonLd } from "@/lib/seo/jsonld";
 import { site } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPostBySlug(slug);
-  if (!post) return {};
+  const data = await getBlogPostBySlug(slug);
+  if (!data) return {};
+  const { article: post } = data;
   return {
     title: post.title,
     description: post.excerpt,
@@ -32,14 +29,17 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 60;
+
 export default async function BlogPostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = blogPostBySlug(slug);
-  if (!post) notFound();
+  const data = await getBlogPostBySlug(slug);
+  if (!data) notFound();
+  const { article: post, related } = data;
   const url = `${site.url}/blog/${post.slug}`;
 
   return (
@@ -82,7 +82,7 @@ export default async function BlogPostPage({
       </div>
 
       <div className="mt-14">
-        <RelatedArticles articles={relatedBlogPosts(post)} />
+        <RelatedArticles articles={related} />
       </div>
 
       <div className="mt-14">

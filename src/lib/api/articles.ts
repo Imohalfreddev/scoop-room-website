@@ -91,6 +91,45 @@ export async function getArticleBySlug(
 }
 
 /**
+ * Blog posts (src/app/(site)/blog) live in the same `articles` table as
+ * news, distinguished by `type: "BLOG"` — see prisma/schema.prisma. In mock
+ * mode this still reads from src/lib/mock/blog.ts, exactly like every other
+ * page here falls back to its own mock/* data.
+ */
+export async function getBlogPosts(page = 1, pageSize = 24): Promise<ArticleListResult> {
+  if (isServer() && USE_MOCK_API) {
+    const { blogPosts } = await import("@/lib/mock/blog");
+    return { items: blogPosts, total: blogPosts.length, page: 1, pageSize: blogPosts.length, hasMore: false };
+  }
+  if (isServer() && !USE_MOCK_API) {
+    const { getBlogArticlesDb } = await import("@/lib/repository/articles.db");
+    return getBlogArticlesDb({ page, pageSize });
+  }
+  const qs = toQueryString({ page, pageSize });
+  return apiFetch<ArticleListResult>(`/api/blog${qs ? `?${qs}` : ""}`);
+}
+
+export async function getBlogPostBySlug(
+  slug: string
+): Promise<{ article: Article; related: Article[] } | null> {
+  try {
+    if (isServer() && USE_MOCK_API) {
+      const { blogPostBySlug, relatedBlogPosts } = await import("@/lib/mock/blog");
+      const article = blogPostBySlug(slug);
+      if (!article) return null;
+      return { article, related: relatedBlogPosts(article) };
+    }
+    if (isServer() && !USE_MOCK_API) {
+      const { getBlogArticleWithRelatedDb } = await import("@/lib/repository/articles.db");
+      return getBlogArticleWithRelatedDb(slug);
+    }
+    return await apiFetch(`/api/blog/${slug}`, { next: { revalidate: 60 } });
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Article creation/editing/deletion happens exclusively in the separate
  * admin app now (see scoop-room-admin) — it's the only thing with write
  * access to this database. This file only ever reads.

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { blogPosts, popularBlogPosts } from "@/lib/mock/blog";
+import { getBlogPosts } from "@/lib/api/articles";
 import { ArticleCard } from "@/components/news/ArticleCard";
 import { AdSlot } from "@/components/news/AdSlot";
 import { getAdSlotConfigs } from "@/lib/api/adSlots";
@@ -15,9 +15,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
+export const revalidate = 60;
+
 export default async function BlogIndexPage() {
-  const [lead, ...rest] = blogPosts;
-  const sidebarAds = await getAdSlotConfigs("sidebar");
+  const [{ items: posts }, sidebarAds] = await Promise.all([
+    getBlogPosts(1, 24),
+    getAdSlotConfigs("sidebar"),
+  ]);
+
+  const [lead, ...rest] = posts;
+  const popularPosts = [...posts].sort((a, b) => b.views - a.views).slice(0, 5);
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
@@ -35,6 +42,11 @@ export default async function BlogIndexPage() {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
         <div>
+          {posts.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted">
+              No blog posts published yet — check back soon.
+            </p>
+          )}
           {lead && (
             <div className="aspect-[16/9] sm:aspect-[21/9]">
               <ArticleCard article={lead} variant="featured" priority />
@@ -53,7 +65,7 @@ export default async function BlogIndexPage() {
               Popular posts
             </p>
             <ol className="space-y-3">
-              {popularBlogPosts.slice(0, 5).map((post, i) => (
+              {popularPosts.map((post, i) => (
                 <li key={post.id}>
                   <Link href={`/blog/${post.slug}`} className="group flex items-start gap-3">
                     <span className="font-display text-xl font-bold text-border">{i + 1}</span>
