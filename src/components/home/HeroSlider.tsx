@@ -96,23 +96,50 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                 <p className="mt-5 max-w-xl text-base text-white/75 sm:text-lg">
                   {active.dek}
                 </p>
-                <div className="pointer-events-auto mt-8 flex items-center gap-4">
-                  <Link
-                    href={`/article/${active.slug}`}
-                    className="inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3 text-sm font-semibold text-white transition hover:bg-signal-bright"
-                  >
-                    Read the full story <ArrowUpRight size={16} />
-                  </Link>
-                  <button
-                    onClick={() => setPaused((p) => !p)}
-                    aria-label={paused ? "Resume autoplay" : "Pause autoplay"}
-                    className="flex size-11 items-center justify-center rounded-full border border-white/25 text-white/80 transition hover:border-signal hover:text-signal"
-                  >
-                    {paused ? <Play size={16} /> : <Pause size={16} />}
-                  </button>
-                </div>
               </motion.div>
             </AnimatePresence>
+
+            {/* Mobile/tablet cover image — the desktop side-card below is
+                hidden until the `lg` breakpoint, so without this, phones
+                and tablets never showed the article photo at all. */}
+            <div className="pointer-events-auto relative mt-6 block lg:hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5"
+                >
+                  <Image
+                    src={active.coverImage}
+                    alt={active.title}
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="pointer-events-auto mt-8 flex items-center gap-4">
+              <Link
+                href={`/article/${active.slug}`}
+                className="inline-flex items-center gap-2 rounded-full bg-signal px-6 py-3 text-sm font-semibold text-white transition hover:bg-signal-bright"
+              >
+                Read the full story <ArrowUpRight size={16} />
+              </Link>
+              <button
+                onClick={() => setPaused((p) => !p)}
+                aria-label={paused ? "Resume autoplay" : "Pause autoplay"}
+                className="flex size-11 items-center justify-center rounded-full border border-white/25 text-white/80 transition hover:border-signal hover:text-signal"
+              >
+                {paused ? <Play size={16} /> : <Pause size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className="pointer-events-auto relative hidden lg:block">
