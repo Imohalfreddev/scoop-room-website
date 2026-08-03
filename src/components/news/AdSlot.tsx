@@ -18,11 +18,14 @@ import { cn } from "@/lib/utils";
  * Sponsored posts and affiliate placements can reuse this same component
  * by passing `configs` with an image + href per slide.
  *
- * Sizing: rather than forcing every ad creative into one fixed aspect
- * ratio (which either crops it or letterboxes it with empty space), the
- * image renders at its own natural width-to-height ratio, full width, no
- * gaps either side. Only the placeholder (no ads yet) uses a fixed-height
- * box, since there's no image to size from.
+ * Sizing: the image displays at its natural aspect ratio, full width, with
+ * object-contain so nothing ever gets cropped — but capped at a max height
+ * per placement so an oddly-shaped creative (e.g. a near-square graphic in
+ * a wide leaderboard slot) can't balloon the layout. For a leaderboard slot
+ * specifically, ad creative should ideally be exported at roughly a 4:1
+ * ratio (e.g. 1200x300px) so it fills the width without hitting that cap —
+ * this is a design/export concern on the image itself, not something CSS
+ * can fully solve for a square or portrait image.
  */
 export function AdSlot({
   placement,
@@ -59,6 +62,15 @@ export function AdSlot({
     setVisible(true);
   }, [slides.length]);
 
+  const maxHeight =
+    placement === "leaderboard"
+      ? "max-h-32 sm:max-h-40"
+      : placement === "in-article"
+        ? "max-h-40 sm:max-h-52"
+        : placement === "sponsored-post"
+          ? "max-h-72"
+          : "max-h-96";
+
   if (slides.length === 0) {
     const placeholderAspect =
       placement === "leaderboard"
@@ -89,7 +101,11 @@ export function AdSlot({
 
   return (
     <div
-      className={cn("relative w-full overflow-hidden rounded-2xl border border-border", className)}
+      className={cn(
+        "relative flex w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-surface",
+        maxHeight,
+        className
+      )}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -98,7 +114,7 @@ export function AdSlot({
         rel="sponsored noopener"
         target="_blank"
         className={cn(
-          "block w-full transition-opacity duration-300",
+          "flex h-full w-full items-center justify-center transition-opacity duration-300",
           visible ? "opacity-100" : "opacity-0"
         )}
       >
@@ -106,7 +122,7 @@ export function AdSlot({
         <img
           src={current.imageUrl}
           alt={current.advertiser ?? "Sponsored"}
-          className="h-auto w-full object-contain"
+          className="h-full w-full object-contain"
         />
       </a>
 
