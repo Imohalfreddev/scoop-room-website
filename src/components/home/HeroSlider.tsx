@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import type { ComponentType } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -9,10 +9,6 @@ import { ArrowUpRight, Pause, Play } from "lucide-react";
 import type { Article } from "@/types";
 import { CategoryPill } from "@/components/news/ArticleMeta";
 import { timeAgo } from "@/lib/utils";
-
-const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
-  ssr: false,
-});
 
 const SLIDE_DURATION = 7000;
 
@@ -22,6 +18,15 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
   const [sceneVisible, setSceneVisible] = useState(true);
+  // Loaded via a plain client-side import() inside useEffect below, rather
+  // than next/dynamic/React.lazy — this guarantees it only ever runs in the
+  // browser (effects never run during SSR, so this can't crash server-side
+  // on the WebGL/three.js code) without depending on next/dynamic's
+  // internal default-export resolution, which is what was throwing
+  // "received a promise that resolves to Module" here.
+  const [HeroScene, setHeroScene] = useState<ComponentType<{ reducedMotion: boolean }> | null>(
+    null
+  );
   const reducedMotion = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,6 +43,16 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [index, paused, reducedMotion, goTo, slides.length]);
+
+  useEffect(() => {
+    let cancelled = false;
+    import("@/components/three/HeroScene").then((mod) => {
+      if (!cancelled) setHeroScene(() => mod.default);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // The WebGL scene runs a continuous 60fps render loop while mounted —
   // fine while it's the hero the user's actually looking at, wasteful (and
@@ -65,21 +80,33 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* Preloads only the next slide's photo (not all of them), so
+          switching slides never has to wait on a fetch — without this,
+          only the currently active slide's image had `priority`, so each
+          new slide's photo started downloading the moment it became
+          active, right when the crossfade needed it to already be there.
+          That gap showed as the background/gradient with nothing on top
+          until the fetch finished. */}
+      <div className="hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img key={slides[(index + 1) % slides.length].id} src={slides[(index + 1) % slides.length].coverImage} alt="" />
+      </div>
+
       <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
-        {sceneVisible && <HeroScene reducedMotion={!!reducedMotion} />}
+        {sceneVisible && HeroScene && <HeroScene reducedMotion={!!reducedMotion} />}
       </div>
       <div className="absolute inset-0 z-[1] bg-gradient-to-t from-ink via-ink/40 to-ink/70 pointer-events-none" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 pb-16 pt-28 sm:px-6 sm:pb-20">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="pointer-events-none">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
                 key={active.id}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="pointer-events-auto mb-5 flex items-center gap-3">
                   <CategoryPill name={active.category.name} slug={active.category.slug} />
@@ -103,23 +130,35 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                 hidden until the `lg` breakpoint, so without this, phones
                 and tablets never showed the article photo at all. */}
             <div className="pointer-events-auto relative mt-6 block lg:hidden">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={active.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
                   className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5"
                 >
-                  <Image
-                    src={active.coverImage}
-                    alt={active.title}
-                    fill
-                    priority
-                    sizes="100vw"
-                    className="object-cover"
-                  />
+                  {/* Ken Burns: a slow continuous zoom for as long as this
+                      slide is on screen (separate from the fade above, so
+                      the two don't fight over the same scale value) — the
+                      static photo reads as alive instead of just sitting
+                      there. */}
+                  <motion.div
+                    className="absolute inset-0"
+                    initial={{ scale: 1 }}
+                    animate={{ scale: 1.06 }}
+                    transition={{ duration: SLIDE_DURATION / 1000 + 1.5, ease: "linear" }}
+                  >
+                    <Image
+                      src={active.coverImage}
+                      alt={active.title}
+                      fill
+                      priority
+                      sizes="100vw"
+                      className="object-cover"
+                    />
+                  </motion.div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </motion.div>
               </AnimatePresence>
@@ -143,23 +182,33 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
           </div>
 
           <div className="pointer-events-auto relative hidden lg:block">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
                 key={active.id}
                 initial={{ opacity: 0, scale: 0.96, rotateY: 6 }}
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_40px_120px_-30px_rgba(227,6,19,0.35)] backdrop-blur"
               >
-                <Image
-                  src={active.coverImage}
-                  alt={active.title}
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 45vw, 90vw"
-                  className="object-cover"
-                />
+                {/* Same slow continuous zoom as the mobile image above,
+                    kept on its own inner element so it doesn't fight with
+                    this card's entrance scale/rotateY animation. */}
+                <motion.div
+                  className="absolute inset-0"
+                  initial={{ scale: 1 }}
+                  animate={{ scale: 1.06 }}
+                  transition={{ duration: SLIDE_DURATION / 1000 + 1.5, ease: "linear" }}
+                >
+                  <Image
+                    src={active.coverImage}
+                    alt={active.title}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 45vw, 90vw"
+                    className="object-cover"
+                  />
+                </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </motion.div>
             </AnimatePresence>
