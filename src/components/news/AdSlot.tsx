@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 import type { AdSlotConfig } from "@/types";
 import { cn } from "@/lib/utils";
+import { BRAND_PLACEHOLDER_SRC } from "@/components/site/BrandImage";
+
+function onAdImgError(e: React.SyntheticEvent<HTMLImageElement>) {
+  const img = e.currentTarget;
+  if (img.src.endsWith(BRAND_PLACEHOLDER_SRC)) return;
+  img.src = BRAND_PLACEHOLDER_SRC;
+}
 
 /**
  * Renders an ad placement, auto-rotating through every active config passed
@@ -142,6 +149,7 @@ export function AdSlot({
         <img
           src={current.imageUrl}
           alt={current.advertiser ?? "Sponsored"}
+          onError={onAdImgError}
           className="h-full w-full object-contain"
         />
       </a>

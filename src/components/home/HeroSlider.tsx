@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ComponentType } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
 import type { Article } from "@/types";
@@ -150,7 +150,7 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                     animate={{ scale: 1.06 }}
                     transition={{ duration: SLIDE_DURATION / 1000 + 1.5, ease: "linear" }}
                   >
-                    <Image
+                    <BrandImage
                       src={active.coverImage}
                       alt={active.title}
                       fill
@@ -200,7 +200,7 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                   animate={{ scale: 1.06 }}
                   transition={{ duration: SLIDE_DURATION / 1000 + 1.5, ease: "linear" }}
                 >
-                  <Image
+                  <BrandImage
                     src={active.coverImage}
                     alt={active.title}
                     fill

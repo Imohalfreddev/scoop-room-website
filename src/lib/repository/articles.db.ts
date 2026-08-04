@@ -16,7 +16,7 @@ import type {
 import type { RepoArticleQuery } from "./articles";
 import type { ArticleDraftInput } from "@/lib/api/articles";
 
-const PLACEHOLDER_COVER = "/api/placeholder/story?w=1600&h=1000";
+const PLACEHOLDER_COVER = "/brand/scoop-room-placeholder.jpg";
 
 type FullDbArticle = DbArticle & {
   category: DbCategory;

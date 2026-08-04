@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api/articles";
 import { articles } from "@/lib/mock/articles";
@@ -100,7 +100,7 @@ export default async function ArticlePage({
       </div>
 
       <div className="relative my-8 aspect-video overflow-hidden rounded-2xl bg-surface">
-        <Image
+        <BrandImage
           src={article.coverImage}
           alt={article.title}
           fill

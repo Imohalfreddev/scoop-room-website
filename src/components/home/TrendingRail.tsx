@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Article } from "@/types";
 import { SectionHeader } from "./SectionHeader";
 import Link from "next/link";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { ArticleMeta } from "@/components/news/ArticleMeta";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
@@ -102,7 +102,7 @@ export function TrendingRail({ articles }: { articles: Article[] }) {
             onFocus={() => setActiveIndex(i)}
           >
             <div className="relative aspect-[4/3]">
-              <Image
+              <BrandImage
                 src={a.coverImage}
                 alt={a.title}
                 fill

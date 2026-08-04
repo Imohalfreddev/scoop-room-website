@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { Search, X, TrendingUp } from "lucide-react";
 import type { Article } from "@/types";
 import { timeAgo } from "@/lib/utils";
@@ -118,7 +118,7 @@ export function SearchOverlay({
               className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-surface"
             >
               <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-surface">
-                <Image src={a.coverImage} alt="" fill className="object-cover" sizes="56px" />
+                <BrandImage src={a.coverImage} alt="" fill className="object-cover" sizes="56px" />
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{a.title}</p>

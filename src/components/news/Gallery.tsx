@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { MediaAsset } from "@/types";
@@ -20,7 +20,7 @@ export function Gallery({ images }: { images: MediaAsset[] }) {
             onClick={() => setOpenIndex(i)}
             className="group relative aspect-square overflow-hidden rounded-lg bg-surface"
           >
-            <Image
+            <BrandImage
               src={img.url}
               alt={img.alt}
               fill
@@ -63,7 +63,7 @@ export function Gallery({ images }: { images: MediaAsset[] }) {
               className="relative h-[70vh] w-full max-w-4xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
+              <BrandImage
                 src={images[openIndex].url}
                 alt={images[openIndex].alt}
                 fill

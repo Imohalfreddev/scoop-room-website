@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import type { Article } from "@/types";
 import { ArticleMeta, CategoryPill } from "./ArticleMeta";
 import { BookmarkButton } from "./BookmarkButton";
@@ -39,7 +39,7 @@ export function ArticleCard({
           <ArticleMeta article={article} showAuthor={false} />
         </div>
         <div className="relative hidden size-16 shrink-0 overflow-hidden rounded-lg bg-surface sm:block">
-          <Image src={article.coverImage} alt={article.title} fill sizes="64px" className="object-cover" />
+          <BrandImage src={article.coverImage} alt={article.title} fill sizes="64px" className="object-cover" />
         </div>
       </Link>
     );
@@ -49,7 +49,7 @@ export function ArticleCard({
     return (
       <Link href={`${basePath}/${article.slug}`} className="group flex gap-3">
         <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-surface">
-          <Image src={article.coverImage} alt={article.title} fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" />
+          <BrandImage src={article.coverImage} alt={article.title} fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" />
         </div>
         <div className="min-w-0">
           <CategoryPill name={article.category.name} slug={article.category.slug} className="mb-1.5" nested />
@@ -68,7 +68,7 @@ export function ArticleCard({
         href={`${basePath}/${article.slug}`}
         className="group relative block h-full overflow-hidden rounded-2xl bg-ink"
       >
-        <Image
+        <BrandImage
           src={article.coverImage}
           alt={article.title}
           fill
@@ -95,7 +95,7 @@ export function ArticleCard({
   return (
     <Link href={`${basePath}/${article.slug}`} className="group block">
       <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-xl bg-surface">
-        <Image
+        <BrandImage
           src={article.coverImage}
           alt={article.title}
           fill

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { notFound } from "next/navigation";
 import { getBlogPostBySlug } from "@/lib/api/articles";
 import { CategoryPill, ArticleMeta } from "@/components/news/ArticleMeta";
@@ -65,7 +65,7 @@ export default async function BlogPostPage({
       </div>
 
       <div className="relative my-8 aspect-video overflow-hidden rounded-2xl bg-surface">
-        <Image src={post.coverImage} alt={post.title} fill priority sizes="768px" className="object-cover" />
+        <BrandImage src={post.coverImage} alt={post.title} fill priority sizes="768px" className="object-cover" />
       </div>
 
       <div

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { BrandImage } from "@/components/site/BrandImage";
 import { notFound } from "next/navigation";
 import { authorBySlug, authors } from "@/lib/mock/authors";
 import { articles } from "@/lib/mock/articles";
@@ -36,7 +36,7 @@ export default async function AuthorPage({
     <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
       <div className="mb-12 flex flex-col items-start gap-5 border-b border-border pb-10 sm:flex-row sm:items-center">
         <div className="relative size-24 shrink-0 overflow-hidden rounded-full bg-surface">
-          <Image src={author.avatarUrl} alt={author.name} fill sizes="96px" className="object-cover" />
+          <BrandImage src={author.avatarUrl} alt={author.name} fill sizes="96px" className="object-cover" />
         </div>
         <div>
           <h1 className="font-display text-3xl font-semibold tracking-tight">{author.name}</h1>
