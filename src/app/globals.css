@@ -47,7 +47,7 @@
   --font-mono: var(--font-jetbrains-mono);
 
   --animate-wire-pulse: wire-pulse 2.4s ease-in-out infinite;
-  --animate-marquee: marquee 32s linear infinite;
+  --animate-marquee: marquee 55s linear infinite;
 }
 
 /* Enable class-based dark mode (driven by next-themes) under Tailwind v4 */
