@@ -169,7 +169,7 @@ export async function queryArticlesDb(
 
   const where = {
     status: "PUBLISHED" as const,
-    type: "NEWS" as const,
+    ...(category ? {} : { type: "NEWS" as const }),
     ...(category ? { category: { slug: category } } : {}),
     ...(tag ? { tags: { some: { slug: tag } } } : {}),
     ...(featured ? { featured: true } : {}),
