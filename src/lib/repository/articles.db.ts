@@ -208,7 +208,7 @@ export async function getArticleWithRelatedDb(
   slug: string
 ): Promise<{ article: Article; related: Article[] } | null> {
   const row = await prisma.article.findFirst({
-    where: { slug, type: "NEWS" },
+    where: { slug, type: "NEWS", status: "PUBLISHED" },
     include: includeRelations,
   });
   if (!row) return null;
@@ -261,7 +261,7 @@ export async function getBlogArticleWithRelatedDb(
   slug: string
 ): Promise<{ article: Article; related: Article[] } | null> {
   const row = await prisma.article.findFirst({
-    where: { slug, type: "BLOG" },
+    where: { slug, type: "BLOG", status: "PUBLISHED" },
     include: includeRelations,
   });
   if (!row) return null;
