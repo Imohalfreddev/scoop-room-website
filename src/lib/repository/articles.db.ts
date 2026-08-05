@@ -121,7 +121,9 @@ export async function searchArticlesDb(
   const where = {
     status: "PUBLISHED" as const,
     type: "NEWS" as const,
-    ...(category ? { category: { slug: category } } : {}),
+    ...(category
+  ? { category: { slug: { equals: category.trim(), mode: "insensitive" as const } } }
+  : {}),
     ...(from || to
       ? {
           publishedAt: {
@@ -169,8 +171,14 @@ export async function queryArticlesDb(
 
   const where = {
     status: "PUBLISHED" as const,
+    // Category pages should show everything tagged with that category,
+    // news or blog alike - only the homepage feeds (which don't specify a
+    // category) stay news-only, so blog/opinion posts don't mix into
+    // breaking-news rails.
     ...(category ? {} : { type: "NEWS" as const }),
-    ...(category ? { category: { slug: category } } : {}),
+    ...(category
+  ? { category: { slug: { equals: category.trim(), mode: "insensitive" as const } } }
+  : {}),
     ...(tag ? { tags: { some: { slug: tag } } } : {}),
     ...(featured ? { featured: true } : {}),
     ...(trending ? { trending: true } : {}),

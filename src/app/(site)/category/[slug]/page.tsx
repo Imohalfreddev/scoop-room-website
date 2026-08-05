@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { categories } from "@/lib/mock/categories";
 import { getCategoryBySlug } from "@/lib/api/categories";
 import { getArticlesByCategory } from "@/lib/api/articles";
 import { ArticleCard } from "@/components/news/ArticleCard";
@@ -10,11 +9,6 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { site } from "@/lib/constants";
 import type { CategorySlug } from "@/types";
-
-export function generateStaticParams() {
-  return categories.map((c) => ({ slug: c.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: {
