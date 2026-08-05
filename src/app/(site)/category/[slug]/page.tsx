@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { categories } from "@/lib/mock/categories";
 import { getCategoryBySlug } from "@/lib/api/categories";
 import { getArticlesByCategory } from "@/lib/api/articles";
 import { ArticleCard } from "@/components/news/ArticleCard";
@@ -9,6 +10,11 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { site } from "@/lib/constants";
 import type { CategorySlug } from "@/types";
+
+export function generateStaticParams() {
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -63,7 +69,7 @@ export default async function CategoryPage({
       </div>
 
       {lead && (
-        <div className="mb-12 grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+        <div className="mb-12 grid min-h-[420px] gap-6 lg:grid-cols-[1.3fr_0.7fr]">
           <ArticleCard article={lead} variant="featured" priority />
           <div className="space-y-5">
             {rest.slice(0, 3).map((a) => (
