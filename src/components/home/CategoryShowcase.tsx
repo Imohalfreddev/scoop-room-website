@@ -19,7 +19,7 @@ export function CategoryShowcase({
         title={category.name}
         href={`/category/${category.slug}`}
       />
-      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid min-h-[420px] gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <ArticleCard article={lead} variant="featured" />
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1">
           {rest.slice(0, 3).map((a) => (

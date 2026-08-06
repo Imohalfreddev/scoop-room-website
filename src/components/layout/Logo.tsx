@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function Logo({ compact = false }: { compact?: boolean }) {
+export function Logo({ compact = false, priority = false }: { compact?: boolean; priority?: boolean }) {
   if (compact) {
     return (
       <Link href="/" aria-label="Scoop Room home" className="flex items-center">
@@ -10,7 +10,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
           alt="Scoop Room"
           width={377}
           height={288}
-          priority
+          priority={priority}
           className="h-9 w-auto"
         />
       </Link>
@@ -24,7 +24,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
         alt="Scoop Room — The People's Stories. Told With Integrity."
         width={1600}
         height={317}
-        priority
+        priority={priority}
         className="h-8 w-auto dark:hidden"
       />
       <Image
@@ -32,7 +32,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
         alt="Scoop Room — The People's Stories. Told With Integrity."
         width={1600}
         height={317}
-        priority
+        priority={priority}
         className="hidden h-8 w-auto dark:block"
       />
     </Link>

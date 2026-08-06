@@ -72,6 +72,10 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
 
   if (!slides.length) return null;
   const active = slides[index];
+  // Only ever the one slide immediately after the active one — as `index`
+  // advances, this recomputes and swaps to the next one in line, so at any
+  // moment exactly one slide is being preloaded ahead of what's showing.
+  const nextSlide = slides.length > 1 ? slides[(index + 1) % slides.length] : null;
 
   return (
     <section
@@ -80,17 +84,28 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Preloads only the next slide's photo (not all of them), so
-          switching slides never has to wait on a fetch — without this,
-          only the currently active slide's image had `priority`, so each
-          new slide's photo started downloading the moment it became
-          active, right when the crossfade needed it to already be there.
-          That gap showed as the background/gradient with nothing on top
-          until the fetch finished. */}
-      <div className="hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img key={slides[(index + 1) % slides.length].id} src={slides[(index + 1) % slides.length].coverImage} alt="" />
-      </div>
+      {nextSlide && (
+        <div className="hidden" aria-hidden="true">
+          <BrandImage
+            key={`preload-mobile-${nextSlide.id}`}
+            src={nextSlide.coverImage}
+            alt=""
+            width={1600}
+            height={1000}
+            loading="eager"
+            sizes="100vw"
+          />
+          <BrandImage
+            key={`preload-desktop-${nextSlide.id}`}
+            src={nextSlide.coverImage}
+            alt=""
+            width={1600}
+            height={1200}
+            loading="eager"
+            sizes="(min-width: 1024px) 45vw, 90vw"
+          />
+        </div>
+      )}
 
       <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
         {sceneVisible && HeroScene && <HeroScene reducedMotion={!!reducedMotion} />}

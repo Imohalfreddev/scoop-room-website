@@ -130,3 +130,16 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Article body content (src/app/(site)/article/[slug]/page.tsx renders this
+   via dangerouslySetInnerHTML, so it can contain images/videos of any raw
+   size/aspect-ratio pasted into the CMS editor). Force every one of them
+   onto the same display box so they read as one consistent size instead of
+   each showing at its own native resolution. */
+.prose img,
+.prose video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}

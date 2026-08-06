@@ -1,5 +1,6 @@
 import { articles } from "@/lib/mock/articles";
 import { site } from "@/lib/constants";
+import { USE_MOCK_API } from "@/lib/api/config";
 
 function escapeXml(str: string) {
   return str
@@ -10,9 +11,54 @@ function escapeXml(str: string) {
     .replace(/'/g, "&apos;");
 }
 
+interface FeedItem {
+  title: string;
+  slug: string;
+  publishedAt: string;
+  excerpt: string;
+  categoryName: string;
+  authorName: string;
+}
+
+async function getFeedItems(): Promise<FeedItem[]> {
+  if (!USE_MOCK_API) {
+    const { prisma } = await import("@/lib/db/prisma");
+    const rows = await prisma.article.findMany({
+      where: { status: "PUBLISHED", type: "NEWS" },
+      select: {
+        title: true,
+        slug: true,
+        excerpt: true,
+        publishedAt: true,
+        createdAt: true,
+        category: { select: { name: true } },
+        author: { select: { name: true } },
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 50,
+    });
+    return rows.map((a) => ({
+      title: a.title,
+      slug: a.slug,
+      publishedAt: (a.publishedAt ?? a.createdAt).toISOString(),
+      excerpt: a.excerpt,
+      categoryName: a.category.name,
+      authorName: a.author.name,
+    }));
+  }
+  return articles.slice(0, 50).map((a) => ({
+    title: a.title,
+    slug: a.slug,
+    publishedAt: a.publishedAt,
+    excerpt: a.excerpt,
+    categoryName: a.category.name,
+    authorName: a.author.name,
+  }));
+}
+
 export async function GET() {
-  const items = articles
-    .slice(0, 50)
+  const feedItems = await getFeedItems();
+  const items = feedItems
     .map(
       (a) => `
     <item>
@@ -21,8 +67,8 @@ export async function GET() {
       <guid isPermaLink="true">${site.url}/article/${a.slug}</guid>
       <pubDate>${new Date(a.publishedAt).toUTCString()}</pubDate>
       <description>${escapeXml(a.excerpt)}</description>
-      <category>${escapeXml(a.category.name)}</category>
-      <author>${escapeXml(a.author.name)}</author>
+      <category>${escapeXml(a.categoryName)}</category>
+      <author>${escapeXml(a.authorName)}</author>
     </item>`
     )
     .join("");
