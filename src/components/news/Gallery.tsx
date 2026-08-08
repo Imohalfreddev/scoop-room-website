@@ -25,7 +25,7 @@ export function Gallery({ images }: { images: MediaAsset[] }) {
               alt={img.alt}
               fill
               sizes="200px"
-              className="object-cover transition duration-300 group-hover:scale-105"
+              className="transition duration-300 group-hover:scale-105"
             />
           </button>
         ))}
@@ -68,7 +68,6 @@ export function Gallery({ images }: { images: MediaAsset[] }) {
                 alt={images[openIndex].alt}
                 fill
                 sizes="90vw"
-                className="object-contain"
               />
             </div>
             {openIndex < images.length - 1 && (

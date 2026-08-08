@@ -107,7 +107,7 @@ export function TrendingRail({ articles }: { articles: Article[] }) {
                 alt={a.title}
                 fill
                 sizes="320px"
-                className="object-cover transition duration-500 group-hover:scale-105"
+                className="transition duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <span className="absolute left-4 top-4 font-display text-4xl font-bold text-white/90">

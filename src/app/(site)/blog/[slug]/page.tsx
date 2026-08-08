@@ -65,7 +65,7 @@ export default async function BlogPostPage({
       </div>
 
       <div className="relative my-8 aspect-video overflow-hidden rounded-2xl bg-surface">
-        <BrandImage src={post.coverImage} alt={post.title} fill priority sizes="768px" className="object-cover" />
+        <BrandImage src={post.coverImage} alt={post.title} fill priority sizes="768px" />
       </div>
 
       <div

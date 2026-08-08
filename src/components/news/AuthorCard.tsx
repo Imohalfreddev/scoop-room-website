@@ -10,7 +10,7 @@ export function AuthorCard({ author }: { author: Author }) {
       className="flex items-start gap-4 rounded-2xl border border-border p-5 transition hover:border-signal/40"
     >
       <div className="relative size-14 shrink-0 overflow-hidden rounded-full bg-surface">
-        <BrandImage src={author.avatarUrl} alt={author.name} fill sizes="56px" className="object-cover" />
+        <BrandImage src={author.avatarUrl} alt={author.name} fill sizes="56px" fitMode="cover" />
       </div>
       <div className="min-w-0">
         <p className="font-semibold">{author.name}</p>

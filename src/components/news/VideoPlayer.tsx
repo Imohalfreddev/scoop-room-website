@@ -5,7 +5,7 @@ export function VideoPlayer({ src, poster }: { src: string; poster?: string }) {
         controls
         poster={poster}
         preload="metadata"
-        className="aspect-video w-full"
+        className="aspect-video w-full bg-surface object-contain"
       >
         <source src={src} type="video/mp4" />
         Your browser does not support embedded video.

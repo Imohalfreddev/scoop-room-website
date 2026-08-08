@@ -171,7 +171,6 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                       fill
                       priority
                       sizes="100vw"
-                      className="object-cover"
                     />
                   </motion.div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -221,7 +220,6 @@ export function HeroSlider({ articles }: { articles: Article[] }) {
                     fill
                     priority
                     sizes="(min-width: 1024px) 45vw, 90vw"
-                    className="object-cover"
                   />
                 </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
