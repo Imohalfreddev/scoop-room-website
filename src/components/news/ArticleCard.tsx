@@ -39,7 +39,7 @@ export function ArticleCard({
           <ArticleMeta article={article} showAuthor={false} />
         </div>
         <div className="relative hidden size-16 shrink-0 overflow-hidden rounded-lg bg-surface sm:block">
-          <BrandImage src={article.coverImage} alt={article.title} fill sizes="64px" className="object-cover" />
+          <BrandImage src={article.coverImage} alt={article.title} fill sizes="64px" />
         </div>
       </Link>
     );
@@ -49,7 +49,7 @@ export function ArticleCard({
     return (
       <Link href={`${basePath}/${article.slug}`} className="group flex gap-3">
         <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-surface">
-          <BrandImage src={article.coverImage} alt={article.title} fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-105" />
+          <BrandImage src={article.coverImage} alt={article.title} fill sizes="80px" className="transition duration-500 group-hover:scale-105" />
         </div>
         <div className="min-w-0">
           <CategoryPill name={article.category.name} slug={article.category.slug} className="mb-1.5" nested />
@@ -66,7 +66,7 @@ export function ArticleCard({
     return (
       <Link
         href={`${basePath}/${article.slug}`}
-        className="group relative block h-full overflow-hidden rounded-2xl bg-ink"
+        className="group relative block h-64 overflow-hidden rounded-2xl bg-ink sm:h-80 lg:h-full"
       >
         <BrandImage
           src={article.coverImage}
@@ -74,7 +74,7 @@ export function ArticleCard({
           fill
           priority={priority}
           sizes="(min-width: 1024px) 60vw, 100vw"
-          className="object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+          className="opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
         <div className="absolute right-4 top-4">
@@ -101,7 +101,7 @@ export function ArticleCard({
           fill
           priority={priority}
           sizes="(min-width: 1024px) 33vw, 100vw"
-          className={cn("object-cover transition duration-500 group-hover:scale-105")}
+          className={cn("transition duration-500 group-hover:scale-105")}
         />
         <div className="absolute right-3 top-3">
           <BookmarkButton slug={article.slug} />
