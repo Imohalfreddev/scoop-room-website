@@ -6,6 +6,7 @@ import { site } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: `Get in touch with ${site.name} — news tips, corrections, advertising, and general inquiries.`,
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

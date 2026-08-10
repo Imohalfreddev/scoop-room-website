@@ -6,6 +6,7 @@ import { site } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Advertise with us",
   description: `Advertising and sponsorship opportunities with ${site.name}.`,
+  alternates: { canonical: "/advertise" },
 };
 
 export default function AdvertisePage() {

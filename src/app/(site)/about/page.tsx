@@ -6,6 +6,7 @@ import { site } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "About",
   description: `About ${site.name} — ${site.description}`,
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

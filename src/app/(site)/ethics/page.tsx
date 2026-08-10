@@ -6,6 +6,7 @@ import { site } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Newsroom Ethics",
   description: `The editorial principles guiding ${site.name}'s newsroom.`,
+  alternates: { canonical: "/ethics" },
 };
 
 export default function EthicsPage() {

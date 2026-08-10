@@ -47,8 +47,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: site.url, changeFrequency: "hourly", priority: 1 },
     { url: `${site.url}/blog`, changeFrequency: "daily", priority: 0.7 },
-    { url: `${site.url}/search`, changeFrequency: "weekly", priority: 0.3 },
+    { url: `${site.url}/about`, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${site.url}/ethics`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${site.url}/advertise`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${site.url}/careers`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${site.url}/contact`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${site.url}/privacy`, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${site.url}/terms`, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${site.url}/cookies`, changeFrequency: "yearly", priority: 0.2 },
   ];
+  // /search is intentionally excluded — robots.ts disallows it and the page
+  // itself sets `robots: { index: false }`, so it should never appear here.
 
   const categoryRoutes: MetadataRoute.Sitemap = content.categorySlugs.map((slug) => ({
     url: `${site.url}/category/${slug}`,

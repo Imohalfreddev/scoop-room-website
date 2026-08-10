@@ -6,6 +6,7 @@ import { site } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Careers",
   description: `Careers and opportunities at ${site.name}.`,
+  alternates: { canonical: "/careers" },
 };
 
 export default function CareersPage() {
