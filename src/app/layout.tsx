@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/layout/Providers";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd } from "@/lib/seo/jsonld";
 import { site } from "@/lib/constants";
+
+// GA4 measurement ID for scooproomhq.com. Not a secret — it's public in
+// every page's HTML/network requests regardless — so it's fine hardcoded
+// here rather than routed through an env var like site.url.
+const GA_MEASUREMENT_ID = "G-YNF0NHBSJR";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -58,6 +64,18 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         <Providers>
           <JsonLd data={organizationJsonLd()} />
           {children}
