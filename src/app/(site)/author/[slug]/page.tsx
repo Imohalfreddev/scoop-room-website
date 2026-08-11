@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { BrandImage } from "@/components/site/BrandImage";
 import { notFound } from "next/navigation";
-import { authorBySlug, authors } from "@/lib/mock/authors";
-import { articles } from "@/lib/mock/articles";
+import { authors } from "@/lib/mock/authors";
+import { getAuthorBySlug, getArticlesByAuthor } from "@/lib/api/authors";
 import { ArticleCard } from "@/components/news/ArticleCard";
 import { XIcon } from "@/components/icons/SocialIcons";
 
+// Seeds build-time generation for the known mock authors; real DB authors
+// not in this list still render fine via Next's on-demand dynamic
+// rendering fallback (same pattern the category page relies on).
 export function generateStaticParams() {
   return authors.map((a) => ({ slug: a.slug }));
 }
@@ -16,10 +19,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const author = authorBySlug(slug);
+  const author = await getAuthorBySlug(slug);
   if (!author) return {};
-  return { title: author.name, description: author.bio };
+  return {
+    title: author.name,
+    description: author.bio,
+    alternates: { canonical: `/author/${author.slug}` },
+  };
 }
+
+export const revalidate = 60;
 
 export default async function AuthorPage({
   params,
@@ -27,10 +36,10 @@ export default async function AuthorPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const author = authorBySlug(slug);
+  const author = await getAuthorBySlug(slug);
   if (!author) notFound();
 
-  const authorArticles = articles.filter((a) => a.author.id === author.id);
+  const authorArticles = await getArticlesByAuthor(author);
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">

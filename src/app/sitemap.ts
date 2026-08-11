@@ -79,17 +79,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  // Author archive pages (src/app/(site)/author/[slug]/page.tsx) still read
-  // from mock data only regardless of USE_MOCK_API — a separate, pre-existing
-  // gap this fix doesn't touch. Only list them here in mock mode so the live
-  // sitemap never submits an author URL that 404s.
-  const authorRoutes: MetadataRoute.Sitemap = USE_MOCK_API
-    ? authors.map((a) => ({
-        url: `${site.url}/author/${a.slug}`,
-        changeFrequency: "weekly",
-        priority: 0.4,
-      }))
-    : [];
+  // Author archive pages now work in both DB and mock mode (fixed
+  // alongside src/app/(site)/author/[slug]/page.tsx), so both branches
+  // list real, working author URLs here.
+  let authorSlugs: string[];
+  if (!USE_MOCK_API) {
+    const { listAuthorsDb } = await import("@/lib/repository/authors.db");
+    authorSlugs = (await listAuthorsDb()).map((a) => a.slug);
+  } else {
+    authorSlugs = authors.map((a) => a.slug);
+  }
+  const authorRoutes: MetadataRoute.Sitemap = authorSlugs.map((slug) => ({
+    url: `${site.url}/author/${slug}`,
+    changeFrequency: "weekly",
+    priority: 0.4,
+  }));
 
   return [...staticRoutes, ...categoryRoutes, ...articleRoutes, ...blogRoutes, ...authorRoutes];
 }

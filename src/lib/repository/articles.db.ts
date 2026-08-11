@@ -37,7 +37,7 @@ const STATUS_TO_DB: Record<ArticleStatus, DbArticleStatus> = {
   published: "PUBLISHED",
 };
 
-function mapArticle(a: FullDbArticle): Article {
+export function mapArticle(a: FullDbArticle): Article {
   return {
     id: a.id,
     slug: a.slug,
