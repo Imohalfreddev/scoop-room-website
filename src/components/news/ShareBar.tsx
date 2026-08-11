@@ -4,14 +4,37 @@ import { useState } from "react";
 import { Link2, Check, Send } from "lucide-react";
 import { XIcon, FacebookIcon, LinkedinIcon } from "@/components/icons/SocialIcons";
 
-export function ShareBar({ title, url }: { title: string; url: string }) {
+export function ShareBar({
+  title,
+  url,
+  updatedAt,
+}: {
+  title: string;
+  url: string;
+  /**
+   * ISO timestamp of the article's last edit. X/Twitter caches a link's
+   * card (title/description/image) for up to ~7 days keyed on the exact
+   * URL shared, so if a cover image is swapped in the dashboard after a
+   * link has already been shared, X keeps serving the old cached image
+   * even though the page's og:image tag is already correct. Appending
+   * `?v=<updatedAt>` to the X intent link only (not the canonical URL, not
+   * the other share targets) gives X a "new" URL to crawl fresh whenever
+   * the article changes, without touching SEO-facing canonical links or
+   * breaking previously shared/bookmarked URLs.
+   */
+  updatedAt?: string;
+}) {
   const [copied, setCopied] = useState(false);
+
+  const xShareUrl = updatedAt
+    ? `${url}${url.includes("?") ? "&" : "?"}v=${encodeURIComponent(Date.parse(updatedAt) || updatedAt)}`
+    : url;
 
   const shareLinks = [
     {
       label: "X",
       icon: XIcon,
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(xShareUrl)}`,
     },
     {
       label: "Facebook",

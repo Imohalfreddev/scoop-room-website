@@ -97,7 +97,7 @@ export default async function ArticlePage({
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
         <ArticleMeta article={article} />
         <div className="flex items-center gap-3">
-          <ShareBar title={article.title} url={url} />
+          <ShareBar title={article.title} url={url} updatedAt={article.updatedAt} />
           <BookmarkButton
             slug={article.slug}
             className="!static !size-9 border border-border !bg-transparent !text-foreground/70 hover:!text-signal"
