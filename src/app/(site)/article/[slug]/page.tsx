@@ -33,6 +33,7 @@ export async function generateMetadata({
   const data = await getArticleBySlug(slug);
   if (!data) return {};
   const { article } = data;
+  const canonicalUrl = article.seo?.canonicalUrl ?? `${site.url}/article/${article.slug}`;
 
   return {
     title: article.seo?.metaTitle ?? article.title,
@@ -40,6 +41,9 @@ export async function generateMetadata({
     alternates: { canonical: article.seo?.canonicalUrl ?? `/article/${article.slug}` },
     openGraph: {
       type: "article",
+      url: canonicalUrl,
+      siteName: site.name,
+      locale: site.locale,
       title: article.title,
       description: article.excerpt,
       images: [article.seo?.ogImage ?? article.coverImage],
@@ -48,6 +52,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      site: site.twitter,
+      creator: article.author.twitter,
       title: article.title,
       description: article.excerpt,
       images: [article.seo?.ogImage ?? article.coverImage],
