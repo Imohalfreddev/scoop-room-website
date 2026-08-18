@@ -3,6 +3,8 @@ import { BrandImage } from "@/components/site/BrandImage";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api/articles";
 import { articles } from "@/lib/mock/articles";
+import { USE_MOCK_API } from "@/lib/api/config";
+import { listAllArticlesDb } from "@/lib/repository/articles.db";
 import { CategoryPill } from "@/components/news/ArticleMeta";
 import { ArticleMeta } from "@/components/news/ArticleMeta";
 import { ShareBar } from "@/components/news/ShareBar";
@@ -20,8 +22,15 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, newsArticleJsonLd } from "@/lib/seo/jsonld";
 import { site } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return articles.slice(0, 20).map((a) => ({ slug: a.slug }));
+export async function generateStaticParams() {
+  if (USE_MOCK_API) {
+    return articles.slice(0, 20).map((a) => ({ slug: a.slug }));
+  }
+  const dbArticles = await listAllArticlesDb();
+  return dbArticles
+    .filter((a) => a.status === "published")
+    .slice(0, 20)
+    .map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({

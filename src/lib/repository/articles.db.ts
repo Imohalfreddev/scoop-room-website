@@ -6,7 +6,7 @@ import type {
   MediaAsset as DbMediaAsset,
   User as DbUser,
   ArticleStatus as DbArticleStatus,
-} from "@prisma/client";
+} from "@/generated/prisma/client";
 import type {
   Article,
   ArticleListResult,

@@ -6,7 +6,7 @@
  *
  * Run with: npx prisma db seed
  */
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { categories } from "../src/lib/mock/categories";
 import { authors } from "../src/lib/mock/authors";
 import { tags } from "../src/lib/mock/tags";

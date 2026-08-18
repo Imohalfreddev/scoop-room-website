@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+// Lets `next dev` access Cloudflare bindings (R2, env vars, etc.) the same
+// way the deployed Worker does. Only affects local dev — has no effect on
+// the actual Cloudflare build/deploy.
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   images: {

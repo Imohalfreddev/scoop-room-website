@@ -13,7 +13,30 @@
 //   4. Set NEXT_PUBLIC_USE_MOCK_API=false
 
 generator client {
-  provider = "prisma-client-js"
+  // Required to run on Cloudflare Workers: Workers can't execute Prisma's
+  // native Rust query engine (no arbitrary native binaries in the
+  // sandbox). `engineType = "client"` (GA since Prisma 6.16, we're on
+  // 6.19) removes the Rust/WASM query engine entirely — Prisma Client
+  // becomes pure TypeScript and talks to Postgres directly through the
+  // driver adapter below. This also sidesteps the classic
+  // "query_engine_bg.wasm not found" Wrangler bundling failure that the
+  // older previewFeatures = ["driverAdapters"] setup (WASM engine still
+  // present) is prone to. Using the "prisma-client" provider (not
+  // "prisma-client-js") because Prisma's own docs say the Rust-free path
+  // is only thoroughly tested with "prisma-client" — see
+  // src/generated/prisma for the output, and src/lib/db/prisma.ts for
+  // where it's imported from. Talks to Postgres over node-postgres (`pg`)
+  // via Workers' TCP socket support. Keep the datasource provider below
+  // as "postgresql", NOT "cockroachdb" — Prisma's pg driver adapter
+  // explicitly rejects the "cockroachdb" provider, even though CockroachDB
+  // itself is what's actually running behind this connection. CockroachDB
+  // speaks the Postgres wire protocol and this schema uses no
+  // CockroachDB-specific syntax, so "postgresql" is the correct provider
+  // here regardless of which Postgres-compatible engine is on the other
+  // end.
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
 }
 
 datasource db {

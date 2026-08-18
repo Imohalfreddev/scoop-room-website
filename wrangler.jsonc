@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "scoop-room-website",
+  "main": ".open-next/worker.js",
+  // nodejs_compat is required for `pg` (Postgres/CockroachDB driver) to
+  // work — it enables the node:net-backed TCP socket support the driver
+  // needs. Bump this date forward when you touch this file again; an
+  // old compatibility_date can silently disable newer Node polyfills.
+  "compatibility_date": "2026-08-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Add a route once DNS is cut over, e.g.:
+  // "routes": [{ "pattern": "scooproomhq.com", "custom_domain": true }]
+  "observability": {
+    "enabled": true
+  }
+}
